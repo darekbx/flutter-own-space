@@ -10,6 +10,7 @@ class OwnSpaceApp extends StatelessWidget {
     return MaterialApp(
       title: 'Own Space',
       theme: ThemeData(
+        fontFamily: 'Baloo',
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

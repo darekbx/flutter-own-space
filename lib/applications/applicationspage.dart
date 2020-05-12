@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ownspace/notepad/notepadpage.dart';
+import 'package:ownspace/tasks/taskspage.dart';
 
 class ApplicationsPage extends StatefulWidget {
 
@@ -85,7 +86,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       menuItem("icons/ic_notepad.png" , "Notepad",
                           callback: () { redirect(NotepadPage()); },
                           right: true, bottom: true),
-                      menuItem("icons/ic_tasks.png", "Tasks", right: true, bottom: true),
+                      menuItem("icons/ic_tasks.png", "Tasks",
+                          callback: () { redirect(TasksPage()); },
+                          right: true, bottom: true),
                       menuItem("icons/ic_password_vault.png", "Password vault", bottom: true),
                     ]),
                     Row(children: <Widget>[
@@ -129,7 +132,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           padding: EdgeInsets.all(8),
                           child: Image.asset(assetName, width: 40, height: 40)
                       ),
-                      Text(text, textScaleFactor: 0.75)
+                      Text(text, style: TextStyle(fontSize: 12))
                     ],
                   )),
               onTap: () { callback(); },

@@ -30,7 +30,7 @@ class NotesRepository {
     var db = await DatabaseProvider().open();
     await db.update(
         DatabaseProvider.NOTES_TABLE,
-        { "contents": contents},
+        { "contents": contents },
         where: "`index` = ?",
         whereArgs: [index]
     );

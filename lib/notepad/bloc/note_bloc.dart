@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:ownspace/notepad/bloc/notesrepository.dart';
+import 'package:ownspace/notepad/repostory/notesrepository.dart';
 import 'package:ownspace/notepad/model/note.dart';
 
 import 'note_event.dart';
