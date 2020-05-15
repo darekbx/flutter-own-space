@@ -9,6 +9,7 @@
 .history
 .svn/
 raw/tasks.bpk
+raw/*
 
 # IntelliJ related
 *.iml

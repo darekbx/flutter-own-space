@@ -39,3 +39,4 @@ flutter:
   assets:
       - icons/
       - raw/tasks.bpk
+      - raw/mniammniam.json

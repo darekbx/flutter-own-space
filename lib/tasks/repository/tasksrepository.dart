@@ -4,10 +4,10 @@ import 'package:flutter/services.dart' show rootBundle;
 
 class TasksRepository {
 
-  final String LEGACY_BACKUP_FILE = "tasks.bpk";
+  final String LEGACY_BACKUP_FILE = "raw/tasks.bpk";
 
   Future import() async {
-    String contents = await rootBundle.loadString('raw/tasks.bpk');
+    String contents = await rootBundle.loadString(LEGACY_BACKUP_FILE);
     final String taskDelimiter = "###";
     final String itemDelimiter = "%%";
 
