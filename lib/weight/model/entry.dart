@@ -13,7 +13,7 @@ class Entry extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      //'id': id,
       'date': date,
       'weight': weight,
       'type': type

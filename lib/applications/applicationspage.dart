@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ownspace/notepad/notepadpage.dart';
 import 'package:ownspace/tasks/taskspage.dart';
+import 'package:ownspace/weight/weightpage.dart';
 
 class ApplicationsPage extends StatefulWidget {
 
@@ -79,7 +80,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_books.png", "Books", right: true, bottom: true),
-                      menuItem("icons/ic_weight.png", "Weight", right: true, bottom: true),
+                      menuItem("icons/ic_weight.png", "Weight",
+                          callback: () { redirect(WeightPage()); },
+                          right: true, bottom: true),
                       menuItem("icons/ic_fuel.png", "Fuel", bottom: true),
                     ]),
                     Row(children: <Widget>[

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:ownspace/common/database/databaseprovider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:ownspace/weight/model/entry.dart';
@@ -17,7 +18,8 @@ class EntriesRepository {
 
   Future<List<Entry>> fetchEntriesFromBackup(String contentsString) async {
     return Future(() {
-      List<Map<String, dynamic>> contents = jsonDecode(contentsString);
+      List<dynamic> contents = jsonDecode(contentsString);
+      debugPrint("${contents.length}");
       return contents.map((row) => Entry(row['id'], row['date'], row['weight'], row['type'])).toList();
     });
   }
@@ -38,6 +40,7 @@ class EntriesRepository {
 
   Future _addEntries(List<Entry> entries) async {
     var db = await DatabaseProvider().open();
+    await db.delete(DatabaseProvider.ENTRIES_TABLE);
     await Future.forEach(entries, (entry) async {
       await db.insert(DatabaseProvider.ENTRIES_TABLE, entry.toMap());
     });
