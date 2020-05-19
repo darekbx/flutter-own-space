@@ -1,5 +1,11 @@
 import 'package:equatable/equatable.dart';
 
+enum EntryType {
+  monika, // type 1
+  darek, // type 2
+  michal // type 3
+}
+
 class Entry extends Equatable {
   final int id;
   final String date;

@@ -19,7 +19,6 @@ class EntriesRepository {
   Future<List<Entry>> fetchEntriesFromBackup(String contentsString) async {
     return Future(() {
       List<dynamic> contents = jsonDecode(contentsString);
-      debugPrint("${contents.length}");
       return contents.map((row) => Entry(row['id'], row['date'], row['weight'], row['type'])).toList();
     });
   }
@@ -32,7 +31,21 @@ class EntriesRepository {
     return cursor.map((row) => Entry.fromEntity(row)).toList();
   }
 
-  Future _addEntry(Entry entry) async {
+  Future<List<double>> fetchMaxMinWeight() async {
+    var db = await DatabaseProvider().open();
+    final result = await db.rawQuery("SELECT MAX(weight) AS `max`, MIN(weight) AS `min` FROM ${DatabaseProvider.ENTRIES_TABLE}");
+    db.close();
+    return [result[0]['max'] as double, result[0]['min'] as double];
+  }
+
+  Future<int> fetchCount() async {
+    var db = await DatabaseProvider().open();
+    final result = await db.rawQuery("SELECT COUNT(*) AS `count` FROM ${DatabaseProvider.ENTRIES_TABLE}");
+    db.close();
+    return result[0]['count'] as int;
+  }
+
+  Future addEntry(Entry entry) async {
     var db = await DatabaseProvider().open();
     await db.insert(DatabaseProvider.ENTRIES_TABLE, entry.toMap());
     db.close();
