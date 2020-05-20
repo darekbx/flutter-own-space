@@ -16,10 +16,17 @@ class EntryBloc extends Bloc<EntryEvent, EntryState> {
     if (event is FetchEntries) {
       yield Loading();
       yield* _mapFetchEntriesToState();
+
     } else if (event is AddEntry) {
       yield Loading();
       _entriesRepository.addEntry(event.entry);
       add(FetchEntries());
+
+    } else if (event is DeleteEntry) {
+      yield Loading();
+      _entriesRepository.deleteEntry(event.entry);
+      add(FetchEntries());
+
     } else if (event is ImportEntries) {
       yield Loading();
       await _entriesRepository.import();

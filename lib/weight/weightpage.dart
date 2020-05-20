@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/common/bloc/appbarbloc.dart';
 import 'package:ownspace/weight/bloc/entry.dart';
 import 'package:ownspace/weight/chartpainter.dart';
+import 'package:ownspace/weight/entrieslistpage.dart';
+import 'package:ownspace/weight/entrydialog.dart';
 
 class WeightPage extends StatefulWidget {
 
@@ -31,13 +33,30 @@ class _WeightPageState extends State<WeightPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: _buildTitle()),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.import_export),
-        onPressed: () async {
-          //_showAddDialog();
-          //var list = await EntriesRepository().import();
-        },
-      ),
+      floatingActionButton:
+      Column(
+          mainAxisSize: MainAxisSize.min, children: <Widget>[
+        FloatingActionButton(
+            child: Icon(Icons.add),
+            heroTag: "add_button",
+            onPressed: () {
+              _showAddDialog();
+            }),
+
+        SizedBox(
+          height: 16.0,
+        ),
+
+        FloatingActionButton(
+            child: Icon(Icons.list),
+            heroTag: "list_button",
+            onPressed: () async {
+              await Navigator.push(context,
+                  MaterialPageRoute(
+                      builder: (context) => EntriesListPage()));
+              _entryBloc.add(FetchEntries());
+            })
+      ]),
       body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -57,7 +76,12 @@ class _WeightPageState extends State<WeightPage> {
   }
 
   void _showAddDialog() {
-
+    showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            EntryDialog(callback: (entry) {
+              _entryBloc.add(AddEntry(entry));
+            }));
   }
 
   Widget _buildBody() {

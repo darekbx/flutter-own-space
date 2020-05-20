@@ -58,7 +58,7 @@ class ChartPainter extends CustomPainter {
   }
 
   double convertWeight(Size size, double weight, double heightRatio) =>
-      size.height / 2.5 - ((weight - minWeight) * heightRatio);
+      size.height / 1.2 - ((weight - minWeight) * heightRatio);
 
   void drawEntries(Canvas canvas, Size size, List<Entry> entries, Paint paint) {
     if (entries.isEmpty) {

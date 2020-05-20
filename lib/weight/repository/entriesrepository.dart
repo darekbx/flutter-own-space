@@ -51,6 +51,15 @@ class EntriesRepository {
     db.close();
   }
 
+  Future deleteEntry(Entry entry) async {
+    var db = await DatabaseProvider().open();
+    await db.delete(
+        DatabaseProvider.ENTRIES_TABLE,
+        where: "id = ?",
+        whereArgs: [entry.id]);
+    db.close();
+  }
+
   Future _addEntries(List<Entry> entries) async {
     var db = await DatabaseProvider().open();
     await db.delete(DatabaseProvider.ENTRIES_TABLE);

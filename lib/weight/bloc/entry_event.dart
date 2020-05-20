@@ -15,6 +15,12 @@ class FetchEntries extends EntryEvent {
   FetchEntries() : super([]);
 }
 
+class DeleteEntry extends EntryEvent {
+  final Entry entry;
+
+  DeleteEntry(this.entry) : super([entry]);
+}
+
 class AddEntry extends EntryEvent {
   final Entry entry;
 
