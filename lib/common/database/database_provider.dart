@@ -3,11 +3,12 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 3;
+  final int DB_VERSION = 4;
   final String DB_NAME = "own-space.db";
   static String NOTES_TABLE = "notes";
   static String TASKS_TABLE = "tasks";
   static String ENTRIES_TABLE = "entries";
+  static String FUEL_TABLE = "fuel";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -23,44 +24,54 @@ class DatabaseProvider {
     await _createNotesTable(db);
     await _createTasksTable(db);
     await _createEntriesTable(db);
+    await _createFuelTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion == 1 && newVersion == 2) {
-      await _createTasksTable(db);
-    }
-    if ((oldVersion == 1 || oldVersion == 2) && newVersion == 3) {
-      await _createEntriesTable(db);
-    }
+    await _createTasksTable(db);
+    await _createEntriesTable(db);
+    await _createEntriesTable(db);
+    await _createFuelTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
     await db.execute('''
-    CREATE TABLE `$ENTRIES_TABLE` ( 
-    `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
-    `date` TEXT,
-    `weight` REAL,
-    `type` INTEGER NOT NULL)
-        ''');
+    CREATE TABLE IF NOT EXISTS `$ENTRIES_TABLE` ( 
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
+      `date` TEXT,
+      `weight` REAL,
+      `type` INTEGER NOT NULL)
+    ''');
   }
 
   Future _createTasksTable(Database db) async {
     await db.execute('''
-    CREATE TABLE `$TASKS_TABLE` ( 
-    `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
-    `name` TEXT,
-    `content` TEXT,
-    `date` TEXT,
-    `flag` INTEGER NOT NULL)
-        ''');
+    CREATE TABLE IF NOT EXISTS `$TASKS_TABLE` ( 
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
+      `name` TEXT,
+      `content` TEXT,
+      `date` TEXT,
+      `flag` INTEGER NOT NULL)
+    ''');
   }
 
   Future _createNotesTable(Database db) async {
     await db.execute('''
-    CREATE TABLE `$NOTES_TABLE` ( 
+    CREATE TABLE IF NOT EXISTS `$NOTES_TABLE` ( 
       `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
       `contents` TEXT,
       `index` INTEGER NOT NULL)
+    ''');
+  }
+
+  Future _createFuelTable(Database db) async {
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS $FUEL_TABLE (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
+      `date` TEXT,
+      `liters` REAL,
+      `cost` REAL,
+      `type` INTEGER)
     ''');
   }
 }

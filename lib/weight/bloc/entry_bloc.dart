@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:ownspace/weight/bloc/entry_event.dart';
 import 'package:ownspace/weight/bloc/entry_state.dart';
 import 'package:ownspace/weight/model/entry.dart';
-import 'package:ownspace/weight/repository/entriesrepository.dart';
+import 'package:ownspace/weight/repository/entries_repository.dart';
 
 class EntryBloc extends Bloc<EntryEvent, EntryState> {
 

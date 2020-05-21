@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:ownspace/common/database/databaseprovider.dart';
+import 'package:ownspace/common/database/database_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:ownspace/weight/model/entry.dart';
 

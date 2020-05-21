@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'applications/applicationspage.dart';
+import 'applications/applications_page.dart';
 
 class OwnSpaceApp extends StatelessWidget {
 

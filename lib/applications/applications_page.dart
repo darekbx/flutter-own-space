@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ownspace/notepad/notepadpage.dart';
-import 'package:ownspace/tasks/taskspage.dart';
-import 'package:ownspace/weight/weightpage.dart';
+import 'package:ownspace/fuel/fuel_page.dart';
+import 'package:ownspace/notepad/notepad_page.dart';
+import 'package:ownspace/tasks/tasks_page.dart';
+import 'package:ownspace/weight/weight_page.dart';
 
 class ApplicationsPage extends StatefulWidget {
 
@@ -83,7 +84,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       menuItem("icons/ic_weight.png", "Weight",
                           callback: () { redirect(WeightPage()); },
                           right: true, bottom: true),
-                      menuItem("icons/ic_fuel.png", "Fuel", bottom: true),
+                      menuItem("icons/ic_fuel.png", "Fuel",
+                          callback: () { redirect(FuelPage()); },
+                          bottom: true),
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_notepad.png" , "Notepad",
@@ -118,6 +121,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     return Expanded(
         child: Container(
             decoration: BoxDecoration(
+              color: callback == null ? Colors.red[50] : null,
               border: Border(
                   right: right ? defaultBorder : BorderSide.none,
                   bottom: bottom ? defaultBorder : BorderSide.none,

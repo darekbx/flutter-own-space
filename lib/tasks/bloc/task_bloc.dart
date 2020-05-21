@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:ownspace/tasks/model/task.dart';
-import 'package:ownspace/tasks/repository/tasksrepository.dart';
+import 'package:ownspace/tasks/repository/tasks_repository.dart';
 
 import 'task_event.dart';
 import 'task_state.dart';

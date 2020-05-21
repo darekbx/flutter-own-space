@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/tasks/bloc/task.dart';
 import 'package:ownspace/tasks/model/task.dart';
-import 'package:ownspace/tasks/taskpage.dart';
+import 'package:ownspace/tasks/task_page.dart';
 
 class TasksPage extends StatefulWidget {
 

@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ownspace/common/bloc/appbarbloc.dart';
+import 'package:ownspace/common/bloc/appbar_bloc.dart';
 import 'package:ownspace/weight/bloc/entry.dart';
-import 'package:ownspace/weight/chartpainter.dart';
-import 'package:ownspace/weight/entrieslistpage.dart';
-import 'package:ownspace/weight/entrydialog.dart';
+import 'package:ownspace/weight/chart_painter.dart';
+import 'package:ownspace/weight/entries_list_page.dart';
+import 'package:ownspace/weight/entry_dialog.dart';
 
 class WeightPage extends StatefulWidget {
 
@@ -35,34 +35,53 @@ class _WeightPageState extends State<WeightPage> {
       appBar: AppBar(title: _buildTitle()),
       floatingActionButton:
       Column(
-          mainAxisSize: MainAxisSize.min, children: <Widget>[
-        FloatingActionButton(
-            child: Icon(Icons.add),
-            heroTag: "add_button",
-            onPressed: () {
-              _showAddDialog();
-            }),
-
-        SizedBox(
-          height: 16.0,
-        ),
-
-        FloatingActionButton(
-            child: Icon(Icons.list),
-            heroTag: "list_button",
-            onPressed: () async {
-              await Navigator.push(context,
-                  MaterialPageRoute(
-                      builder: (context) => EntriesListPage()));
-              _entryBloc.add(FetchEntries());
-            })
-      ]),
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            FloatingActionButton(
+                child: Icon(Icons.add),
+                heroTag: "add_button",
+                onPressed: () {
+                  _showAddDialog();
+                }),
+            SizedBox(
+              height: 16.0,
+            ),
+            FloatingActionButton(
+                child: Icon(Icons.list),
+                heroTag: "list_button",
+                onPressed: () async {
+                  await Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context) => EntriesListPage()));
+                  _entryBloc.add(FetchEntries());
+                }),
+            _buildImportButton()
+          ]),
       body: Container(
           width: double.infinity,
           height: double.infinity,
           child: _buildBody()
       ),
     );
+  }
+
+  Widget _buildImportButton() {
+    if (widget.IS_IMPORT_VISIBLE) {
+      return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(
+              height: 16.0,
+            ),
+            FloatingActionButton(
+                child: Icon(Icons.import_export),
+                heroTag: "import_button",
+                onPressed: () async {
+                  _entryBloc.add(ImportEntries());
+                })
+          ]);
+    }
+    return SizedBox();
   }
 
   Widget _buildTitle() {

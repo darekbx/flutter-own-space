@@ -1,4 +1,4 @@
-import 'package:ownspace/common/database/databaseprovider.dart';
+import 'package:ownspace/common/database/database_provider.dart';
 import 'package:ownspace/tasks/model/task.dart';
 import 'package:flutter/services.dart' show rootBundle;
 

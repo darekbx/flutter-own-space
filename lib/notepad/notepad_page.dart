@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:ownspace/notepad/bloc/note.dart';
 import 'package:ownspace/notepad/model/note.dart';
-import 'package:ownspace/notepad/notepainter.dart';
+import 'package:ownspace/notepad/note_painter.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
