@@ -14,6 +14,10 @@ dependencies:
 
   sqflite: ^1.3.0
   path: ^1.7.0
+  autocomplete_textfield: ^1.7.3
+  biometric: ^0.0.9
+  encrypt: ^4.0.1
+  shared_preferences: ^0.5.3+4
 
   bloc: ^4.0.0
   flutter_bloc: ^4.0.0

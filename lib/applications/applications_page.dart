@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
+import 'package:ownspace/passwordvault/authorize/authorizepage.dart';
+import 'package:ownspace/sugar/sugar_page.dart';
 import 'package:ownspace/tasks/tasks_page.dart';
 import 'package:ownspace/weight/weight_page.dart';
 
@@ -76,7 +78,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       menuItem("icons/ic_news.png", "News reader", right: true, bottom: true),
-                      menuItem("icons/ic_sugar.png", "Sugar", right: true, bottom: true),
+                      menuItem("icons/ic_sugar.png", "Sugar",
+                          callback: () { redirect(SugarPage()); },
+                          right: true, bottom: true),
                       menuItem("icons/ic_news.png", "Dots", bottom: true),
                     ]),
                     Row(children: <Widget>[
@@ -95,7 +99,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       menuItem("icons/ic_tasks.png", "Tasks",
                           callback: () { redirect(TasksPage()); },
                           right: true, bottom: true),
-                      menuItem("icons/ic_password_vault.png", "Password vault", bottom: true),
+                      menuItem("icons/ic_password_vault.png", "Password vault",
+                          callback: () { redirect(AuthorizePage()); },
+                          bottom: true),
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),

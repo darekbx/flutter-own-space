@@ -125,6 +125,9 @@ class _FuelPageState extends State<FuelPage> {
   }
 
   Widget _drawSummary(List<FuelEntry> entries) {
+    if (entries.length == 0) {
+      return Container();
+    }
     double litersSum = entries.map((entry) => entry.liters).reduce((a, b) => a + b);
     double costSum = entries.map((entry) => entry.cost).reduce((a, b) => a + b);
     return Container(

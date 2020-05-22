@@ -9,6 +9,7 @@ class DatabaseProvider {
   static String TASKS_TABLE = "tasks";
   static String ENTRIES_TABLE = "entries";
   static String FUEL_TABLE = "fuel";
+  static String SUGAR_TABLE = "sugar";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -25,6 +26,7 @@ class DatabaseProvider {
     await _createTasksTable(db);
     await _createEntriesTable(db);
     await _createFuelTable(db);
+    await _createSugarTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -32,6 +34,7 @@ class DatabaseProvider {
     await _createEntriesTable(db);
     await _createEntriesTable(db);
     await _createFuelTable(db);
+    await _createSugarTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -73,5 +76,15 @@ class DatabaseProvider {
       `cost` REAL,
       `type` INTEGER)
     ''');
+  }
+
+  Future _createSugarTable(Database db) async {
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS $SUGAR_TABLE (
+      `id` INTEGER PRIMARY KEY, 
+      `name` TEXT, 
+      `sugar` REAL, 
+      `timestamp` INTEGER
+    )''');
   }
 }
