@@ -20,46 +20,45 @@ class _BackupState extends State<BackupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //resizeToAvoidBottomInset: true,
+      //resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text("Password Vault"),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _buildTextField(),
           _buildStatusText(),
-          Expanded(child: Container()),
-          Row(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-            _buildButton("Import", () => import()),
-            _buildButton("Export", () => export())
-          ]),
+          _buildButton("Import", () => import())
         ],
       ),
     );
   }
 
   Widget _buildTextField() {
-    return Container(
+    return Expanded(child: Container(
         padding: EdgeInsets.all(16),
         child: TextFormField(
           controller: _textFieldController,
           textAlign: TextAlign.start,
-          maxLines: 26,
           style: TextStyle(fontFamily: 'RobotoMono'),
+          maxLines: 15,
           decoration:
               InputDecoration(hintText: "", border: OutlineInputBorder()),
-        ));
+        )));
   }
 
   Widget _buildButton(String text, VoidCallback onPressed) {
-    return Expanded(
-        child: Padding(
+    return Container(
+      width: double.infinity,
             padding: EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 16),
             child: RaisedButton(
                 child: Text(text),
                 textColor: Colors.white,
                 color: Colors.blueGrey,
-                onPressed: () => onPressed())));
+                onPressed: () => onPressed()));
   }
 
   Widget _buildStatusText() {
@@ -70,24 +69,6 @@ class _BackupState extends State<BackupPage> {
 
   Future<String> loadDecryptionSample() async {
     return await rootBundle.loadString('assets/decryption_sample.base64');
-  }
-
-  void export() async {
-    try {
-      var pin = await _storage.readPin();
-      var encryptedStorage = EncryptedStorage(pin);
-      var data = await encryptedStorage.export();
-      data["PythonDecryptionSample"] = await loadDecryptionSample();
-      var dataJson = json.encode(data);
-      _textFieldController.text = dataJson;
-      setState(() {
-        _statusText = "Data exported";
-      });
-    } catch (e) {
-      setState(() {
-        _statusText = "Export error: $e";
-      });
-    }
   }
 
   Future import() async {

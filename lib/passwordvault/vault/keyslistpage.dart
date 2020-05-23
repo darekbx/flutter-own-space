@@ -34,7 +34,7 @@ class _KeysListState extends State<KeysListPage> {
             onSelected: (index) => _menuOptionSelected(context),
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry<int>>[
-                PopupMenuItem(child: Text("Export / Import"), value: 1)
+                PopupMenuItem(child: Text("Import"), value: 1)
               ];
             },
           ),

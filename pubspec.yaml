@@ -41,6 +41,7 @@ flutter:
         - asset: fonts/baloo2_regular.ttf
 
   assets:
+      - assets/decryption_sample.base64
       - icons/
       - raw/fuel.bpk
       - raw/tasks.bpk

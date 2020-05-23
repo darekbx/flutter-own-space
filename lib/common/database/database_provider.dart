@@ -3,13 +3,14 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 4;
+  final int DB_VERSION = 5;
   final String DB_NAME = "own-space.db";
   static String NOTES_TABLE = "notes";
   static String TASKS_TABLE = "tasks";
   static String ENTRIES_TABLE = "entries";
   static String FUEL_TABLE = "fuel";
   static String SUGAR_TABLE = "sugar";
+  static String VAULT_TABLE = "vault";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -27,6 +28,7 @@ class DatabaseProvider {
     await _createEntriesTable(db);
     await _createFuelTable(db);
     await _createSugarTable(db);
+    await _createVaultTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -35,6 +37,7 @@ class DatabaseProvider {
     await _createEntriesTable(db);
     await _createFuelTable(db);
     await _createSugarTable(db);
+    await _createVaultTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -85,6 +88,16 @@ class DatabaseProvider {
       `name` TEXT, 
       `sugar` REAL, 
       `timestamp` INTEGER
+    )''');
+  }
+
+  Future _createVaultTable(Database db) async {
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS $VAULT_TABLE (
+      `id` INTEGER PRIMARY KEY, 
+      `key` TEXT, 
+      `account` TEXT, 
+      `password` TEXT
     )''');
   }
 }

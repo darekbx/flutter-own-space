@@ -57,7 +57,6 @@ class _SugarPageState extends State<SugarPage> {
         return _buildLoadingView();
       default:
         if (snapshot.hasError) {
-          debugPrint("$snapshot");
           return _buildError(snapshot.error);
         } else {
           if (snapshot.data == null) {
@@ -94,7 +93,6 @@ class _SugarPageState extends State<SugarPage> {
         return _buildLoadingView();
       default:
         if (snapshot.hasError) {
-          debugPrint("$snapshot");
           return _buildError(snapshot.error);
         } else {
           if (snapshot.data == null) {

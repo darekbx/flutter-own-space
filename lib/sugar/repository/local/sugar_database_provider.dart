@@ -19,7 +19,6 @@ class SugarDatabaseProvider {
       try {
         _database.rawQuery("SELECT 1");
       } catch (e) {
-        debugPrint("REOPEN");
         // Reopen
         _database = await DatabaseProvider().open();
       }
