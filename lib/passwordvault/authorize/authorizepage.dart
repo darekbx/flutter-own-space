@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:biometric/biometric.dart';
 import 'package:flutter/services.dart';
 import 'package:ownspace/passwordvault/storage.dart';
 import 'package:ownspace/passwordvault/vault/keyslistpage.dart';
@@ -7,7 +6,6 @@ import 'package:ownspace/passwordvault/vault/keyslistpage.dart';
 enum _State {
   PROVIDE_PIN,
   NOT_AUTHENTICATED,
-  NOT_AVAILABLE,
   AUTHENTICATION_FAILED,
   AUTHENTICATED,
   ENTER_PIN
@@ -21,7 +19,6 @@ class AuthorizePage extends StatefulWidget {
 }
 
 class _AuthorizePageState extends State<AuthorizePage> {
-  final Biometric _biometric = Biometric();
   final Storage _storage = Storage();
   final int _pinSize = 4;
 
@@ -33,57 +30,21 @@ class _AuthorizePageState extends State<AuthorizePage> {
   void initState() {
     super.initState();
     _initAuthState();
-    Future.delayed(Duration.zero, () {
-      _initializeBiometric();
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
-    _biometric.biometricCancel();
+    _pinControllers.forEach((controller) => controller.dispose());
   }
 
   _initAuthState() async {
     _storage.containsPin().then((containsPin) {
       setState(() {
         _authState =
-            containsPin ? _State.NOT_AUTHENTICATED : _State.PROVIDE_PIN;
+            containsPin ? _State.ENTER_PIN : _State.PROVIDE_PIN;
       });
     });
-  }
-
-  Future<void> _initializeBiometric() async {
-    bool authAvailable = false;
-
-    try {
-      authAvailable = await _biometric.biometricAvailable();
-    } on PlatformException catch (e) {
-      print(e);
-    }
-
-    if (authAvailable) {
-      bool result = false;
-      try {
-        result = await _biometric.biometricAuthenticate(keepAlive: true);
-      } on PlatformException catch (e) {
-        print(e);
-      }
-
-      if (mounted) {
-        if (result) {
-          _redirectToVault();
-        } else {
-          setState(() {
-            _authState = _State.AUTHENTICATION_FAILED;
-          });
-        }
-      }
-    } else {
-      setState(() {
-        _authState = _State.NOT_AVAILABLE;
-      });
-    }
   }
 
   @override
@@ -92,9 +53,6 @@ class _AuthorizePageState extends State<AuthorizePage> {
     switch (_authState) {
       case _State.NOT_AUTHENTICATED:
         body = _displayAuthWidget();
-        break;
-      case _State.NOT_AVAILABLE:
-        body = _errorMessage("Not available");
         break;
       case _State.AUTHENTICATION_FAILED:
         body = _errorMessage("Authentication failed");
@@ -156,9 +114,6 @@ class _AuthorizePageState extends State<AuthorizePage> {
   void _retryAuthentication() {
     setState(() {
       _authState = _State.NOT_AUTHENTICATED;
-    });
-    Future.delayed(Duration.zero, () {
-      _initializeBiometric();
     });
   }
 

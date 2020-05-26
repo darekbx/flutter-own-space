@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
+import 'package:ownspace/news/readerpage.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
 import 'package:ownspace/passwordvault/authorize/authorizepage.dart';
 import 'package:ownspace/sugar/sugar_page.dart';
@@ -77,7 +78,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Row(children: <Widget>[
-                      menuItem("icons/ic_news.png", "News reader", right: true, bottom: true),
+                      menuItem("icons/ic_news.png", "News reader",
+                          callback: () { redirect(ReaderPage()); },
+                          right: true, bottom: true),
                       menuItem("icons/ic_sugar.png", "Sugar",
                           callback: () { redirect(SugarPage()); },
                           right: true, bottom: true),
@@ -104,9 +107,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           bottom: true),
                     ]),
                     Row(children: <Widget>[
+                      menuItem("icons/ic_allegro.png", "Allegro Observer", right: true),
                       menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),
-                      menuItem("icons/ic_backup.png", "Backup", right: true),
-                      menuItem("icons/ic_backup.png", "", hidden: true),
+                      menuItem("icons/ic_backup.png", "Backup"),
                     ]),
                   ],),
               )

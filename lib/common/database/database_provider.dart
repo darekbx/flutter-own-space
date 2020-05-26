@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 5;
+  final int DB_VERSION = 6;
   final String DB_NAME = "own-space.db";
   static String NOTES_TABLE = "notes";
   static String TASKS_TABLE = "tasks";
@@ -11,6 +11,8 @@ class DatabaseProvider {
   static String FUEL_TABLE = "fuel";
   static String SUGAR_TABLE = "sugar";
   static String VAULT_TABLE = "vault";
+  static String SAVED_LINKS_TABLE = "saved_links";
+  static String NEWS_TAG_TABLE = "news_tag";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -29,6 +31,8 @@ class DatabaseProvider {
     await _createFuelTable(db);
     await _createSugarTable(db);
     await _createVaultTable(db);
+    await _createSavedLinksTable(db);
+    await _createNewsTagTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -38,6 +42,8 @@ class DatabaseProvider {
     await _createFuelTable(db);
     await _createSugarTable(db);
     await _createVaultTable(db);
+    await _createSavedLinksTable(db);
+    await _createNewsTagTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -99,5 +105,25 @@ class DatabaseProvider {
       `account` TEXT, 
       `password` TEXT
     )''');
+  }
+
+  Future _createSavedLinksTable(Database db) async {
+    await db.execute("""
+    CREATE TABLE $SAVED_LINKS_TABLE (
+      `id` INTEGER PRIMARY KEY, 
+      `linkId` INTEGER,
+      `title` TEXT, 
+      `description` TEXT, 
+      `imageUrl` TEXT
+    )""");
+  }
+
+  Future _createNewsTagTable(Database db) async {
+    await db.execute("""
+    CREATE TABLE $NEWS_TAG_TABLE (
+      `id` INTEGER PRIMARY KEY, 
+      `tag` TEXT,
+      `count` INTEGER
+    )""");
   }
 }

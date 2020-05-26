@@ -41,7 +41,7 @@ class Summary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-      color: Colors.blueGrey,
+      color: Colors.green,
       child: Row(children: <Widget>[
         Padding(
             padding: EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 16.0),

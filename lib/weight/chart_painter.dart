@@ -28,6 +28,10 @@ class ChartPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
 
+    if (entries.isEmpty) {
+      return;
+    }
+
     drawEntries(canvas, size, entriesByType(1), paintType1);
     drawEntries(canvas, size, entriesByType(2), paintType2);
     drawEntries(canvas, size, entriesByType(3), paintType3);

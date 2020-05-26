@@ -27,6 +27,8 @@ class _NotepadPageState extends State<NotepadPage> {
   NoteBloc _noteBloc;
   int _maxNoteIndex = -1;
 
+  Map<int, TextEditingController> _controllers = Map<int, TextEditingController>();
+
   ScrollController _scrollController = ScrollController();
   double _scrollPosition = 0.0;
 
@@ -36,7 +38,6 @@ class _NotepadPageState extends State<NotepadPage> {
     _noteBloc = NoteBloc();
     super.initState();
   }
-
 
   void addNote() async {
     _noteBloc.add(AddNote(Note(null, "Empty", _maxNoteIndex + 1)));
@@ -82,6 +83,9 @@ class _NotepadPageState extends State<NotepadPage> {
                   return _showStatus("No notes present, please add.");
                 } else {
                   _obtainMaxIndex(state);
+                  state.notes.forEach((note) {
+                    _controllers[note.index] = TextEditingController()..text = note.contents;
+                  });
                   return _showNoteTabs(state);
                 }
               }
@@ -160,7 +164,7 @@ class _NotepadPageState extends State<NotepadPage> {
                           expands: true,
                           maxLines: null,
 
-                          controller: TextEditingController()..text = note.contents,
+                          controller: _controllers[note.index],
                           onChanged: (String contents) {
                             _noteBloc.add(UpdateNote(note.index, contents));
                           },
