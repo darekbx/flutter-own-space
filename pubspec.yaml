@@ -20,6 +20,8 @@ dependencies:
   shared_preferences: ^0.5.7
   flutter_html: ^1.0.0-pre.1
   url_launcher: ^5.4.10
+  archive: ^2.0.13
+  path_provider: ^1.6.9
 
   bloc: ^4.0.0
   flutter_bloc: ^4.0.0
@@ -48,3 +50,4 @@ flutter:
       - raw/fuel.bpk
       - raw/tasks.bpk
       - raw/mniammniam.json
+      - raw/README.md

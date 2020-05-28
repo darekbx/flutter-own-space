@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ownspace/backup/backup_page.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
 import 'package:ownspace/news/readerpage.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
@@ -109,7 +110,8 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     Row(children: <Widget>[
                       menuItem("icons/ic_allegro.png", "Allegro Observer", right: true),
                       menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),
-                      menuItem("icons/ic_backup.png", "Backup"),
+                      menuItem("icons/ic_backup.png", "Backup",
+                        callback: () { redirect(BackupPage()); },),
                     ]),
                   ],),
               )
@@ -130,7 +132,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     return Expanded(
         child: Container(
             decoration: BoxDecoration(
-              color: callback == null ? Colors.red[50] : null,
+              color: callback == null ? Colors.black12 : null,
               border: Border(
                   right: right ? defaultBorder : BorderSide.none,
                   bottom: bottom ? defaultBorder : BorderSide.none,
@@ -148,7 +150,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           padding: EdgeInsets.all(8),
                           child: Image.asset(assetName, width: 40, height: 40)
                       ),
-                      Text(text, style: TextStyle(fontSize: 12))
+                      Text(text, style: TextStyle(fontSize: 11))
                     ],
                   )),
               onTap: () { callback(); },

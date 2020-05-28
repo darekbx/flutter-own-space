@@ -4,15 +4,15 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseProvider {
 
   final int DB_VERSION = 6;
-  final String DB_NAME = "own-space.db";
-  static String NOTES_TABLE = "notes";
-  static String TASKS_TABLE = "tasks";
-  static String ENTRIES_TABLE = "entries";
-  static String FUEL_TABLE = "fuel";
-  static String SUGAR_TABLE = "sugar";
-  static String VAULT_TABLE = "vault";
-  static String SAVED_LINKS_TABLE = "saved_links";
-  static String NEWS_TAG_TABLE = "news_tag";
+  static final String DB_NAME = "own-space.db";
+  static final String NOTES_TABLE = "notes";
+  static final String TASKS_TABLE = "tasks";
+  static final String ENTRIES_TABLE = "entries";
+  static final String FUEL_TABLE = "fuel";
+  static final String SUGAR_TABLE = "sugar";
+  static final String VAULT_TABLE = "vault";
+  static final String SAVED_LINKS_TABLE = "saved_links";
+  static final String NEWS_TAG_TABLE = "news_tag";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
