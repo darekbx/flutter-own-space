@@ -3,7 +3,8 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 6;
+  final int DB_VERSION = 7;
+
   static final String DB_NAME = "own-space.db";
   static final String NOTES_TABLE = "notes";
   static final String TASKS_TABLE = "tasks";
@@ -13,6 +14,9 @@ class DatabaseProvider {
   static final String VAULT_TABLE = "vault";
   static final String SAVED_LINKS_TABLE = "saved_links";
   static final String NEWS_TAG_TABLE = "news_tag";
+  static final String BOOKS_TABLE = "books";
+  static final String BOOKS_TO_READ_TABLE = "books_to_read";
+  static final String BOOKS_CHARE_LOG_TABLE = "books_charge_log";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -33,6 +37,9 @@ class DatabaseProvider {
     await _createVaultTable(db);
     await _createSavedLinksTable(db);
     await _createNewsTagTable(db);
+    await _createBooksTable(db);
+    await _createBooksToReadTable(db);
+    await _createBooksChargeLogTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -44,6 +51,9 @@ class DatabaseProvider {
     await _createVaultTable(db);
     await _createSavedLinksTable(db);
     await _createNewsTagTable(db);
+    await _createBooksTable(db);
+    await _createBooksToReadTable(db);
+    await _createBooksChargeLogTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -109,7 +119,7 @@ class DatabaseProvider {
 
   Future _createSavedLinksTable(Database db) async {
     await db.execute("""
-    CREATE TABLE $SAVED_LINKS_TABLE (
+    CREATE TABLE IF NOT EXISTS $SAVED_LINKS_TABLE (
       `id` INTEGER PRIMARY KEY, 
       `linkId` INTEGER,
       `title` TEXT, 
@@ -120,10 +130,38 @@ class DatabaseProvider {
 
   Future _createNewsTagTable(Database db) async {
     await db.execute("""
-    CREATE TABLE $NEWS_TAG_TABLE (
+    CREATE TABLE IF NOT EXISTS $NEWS_TAG_TABLE (
       `id` INTEGER PRIMARY KEY, 
       `tag` TEXT,
       `count` INTEGER
+    )""");
+  }
+
+  Future _createBooksTable(Database db) async {
+    await db.execute("""
+    CREATE TABLE IF NOT EXISTS `$BOOKS_TABLE` (
+      `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+      `author` TEXT, 
+      `title` TEXT, 
+      `flags` TEXT, 
+      `year` INTEGER
+    )""");
+  }
+
+  Future _createBooksToReadTable(Database db) async {
+    await db.execute("""
+    CREATE TABLE IF NOT EXISTS `$BOOKS_TO_READ_TABLE` (
+      `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+      `author` TEXT, 
+      `title` TEXT
+    )""");
+  }
+
+  Future _createBooksChargeLogTable(Database db) async {
+    await db.execute("""
+    CREATE TABLE IF NOT EXISTS `$BOOKS_CHARE_LOG_TABLE` (
+      `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+      `date` TEXT
     )""");
   }
 }
