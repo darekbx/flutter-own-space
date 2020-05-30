@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ownspace/backup/backup_page.dart';
+import 'package:ownspace/bookmanager/books_page.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
 import 'package:ownspace/news/readerpage.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
@@ -88,7 +89,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       menuItem("icons/ic_news.png", "Dots", bottom: true),
                     ]),
                     Row(children: <Widget>[
-                      menuItem("icons/ic_books.png", "Books", right: true, bottom: true),
+                      menuItem("icons/ic_books.png", "Books",
+                          callback: () { redirect(BooksPage()); },
+                          right: true, bottom: true),
                       menuItem("icons/ic_weight.png", "Weight",
                           callback: () { redirect(WeightPage()); },
                           right: true, bottom: true),

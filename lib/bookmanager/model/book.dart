@@ -1,6 +1,14 @@
 
 class Book {
 
+  /**
+   * Flags:
+   * 0 - Kindle
+   * 1 - Blue (Good)
+   * 2 - Red (Best)
+   * 3 - Book in English
+   */
+
   final int id;
   final String author;
   final String title;
