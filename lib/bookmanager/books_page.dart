@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/bookmanager/bloc/book.dart';
+import 'package:ownspace/bookmanager/books/books_widget.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 
 class BooksPage extends StatefulWidget {
@@ -18,6 +19,14 @@ class _BooksPageState extends State<BooksPage> {
 
   BookBloc _bookBloc;
   AppBarBloc _appBarBloc;
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -40,6 +49,31 @@ class _BooksPageState extends State<BooksPage> {
           width: double.infinity,
           height: double.infinity,
           child: _buildBody()
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.import_contacts),
+            title: Text(""),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.watch_later),
+            title: Text(""),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.battery_charging_full),
+            title: Text(""),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            title: Text("")
+          ),
+        ],
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -74,36 +108,10 @@ class _BooksPageState extends State<BooksPage> {
   }
 
   Widget _buildBody() {
-    return BlocProvider(
-        create: (context) => _bookBloc,
-        child: BlocBuilder<BookBloc, BookState>(
-            builder: (context, state) {
-              if (state is Loading) {
-                return _showStatus("Loading...");
-              } else if (state is InitialState) {
+    if (_selectedIndex == 0) {
+      return BooksWidget();
+    }
 
-                _bookBloc.add(ListBooks());
-
-                return _showStatus("Loading...");
-              } else if (state is Finished) {
-
-                _bookBloc.add(ListBooks());
-
-                return _showStatus("Finished");
-              } else if (state is Error) {
-                return _showStatus("Error, while loading task: ${state.message}");
-              } else if (state is ListFinished) {
-
-                _appBarBloc.updateTitle("Count: ${state.books.length}");
-                return _showStatus("List Finished?");
-              }
-            })
-    );
-  }
-
-  Widget _showStatus(String status) {
-    return Center(
-      child: Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
-    );
+    return Container();
   }
 }

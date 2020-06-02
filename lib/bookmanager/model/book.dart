@@ -9,7 +9,7 @@ class Book {
    * 3 - Book in English
    */
 
-  final int id;
+  int id;
   final String author;
   final String title;
   final String flags;
@@ -20,9 +20,17 @@ class Book {
   @override
   List<Object> get props => [id, author, title, flags];
 
+  bool isFromKindle() => flags.contains("0");
+
+  bool isGood() => flags.contains("1");
+
+  bool isBest() => flags.contains("2");
+
+  bool isInEnglish() => flags.contains("3");
+
   Map<String, dynamic> toMap() {
     return {
-      //'id': id,
+      //'_id': id,
       'author': author,
       'title': title,
       'flags': flags,
@@ -32,7 +40,7 @@ class Book {
 
   static Book fromEntity(Map<String, dynamic> entity) {
     return Book(
-        entity['id'],
+        entity['_id'],
         entity['author'],
         entity['title'],
         entity['flags'],

@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:ownspace/bookmanager/model/book.dart';
 import 'package:ownspace/bookmanager/model/charge_log.dart';
 import 'package:ownspace/bookmanager/model/to_read.dart';
@@ -63,15 +63,21 @@ class BooksRepository {
       await db.insert(DatabaseProvider.BOOKS_CHARE_LOG_TABLE, chargeLog.toMap());
     });
 
-    db.close();
+    await db.close();
   }
 
   Future<List<Book>> fetchBooks() async {
     var db = await DatabaseProvider().open();
     final List<Map<String, dynamic>> cursor =
-      await db.query(DatabaseProvider.BOOKS_TABLE);
+      await db.query(DatabaseProvider.BOOKS_TABLE, orderBy: "_id DESC");
     db.close();
-    return cursor.map((row) => Book.fromEntity(row)).toList();
+
+    int index = cursor.length;
+    return cursor.map((row) {
+      Book book = Book.fromEntity(row);
+      book.id = index--;
+      return book;
+    }).toList();
   }
 
   Future addBook(Book book) async {
