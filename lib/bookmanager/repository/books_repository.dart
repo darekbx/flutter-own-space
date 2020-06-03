@@ -72,12 +72,7 @@ class BooksRepository {
       await db.query(DatabaseProvider.BOOKS_TABLE, orderBy: "_id DESC");
     db.close();
 
-    int index = cursor.length;
-    return cursor.map((row) {
-      Book book = Book.fromEntity(row);
-      book.id = index--;
-      return book;
-    }).toList();
+    return cursor.map((row) => Book.fromEntity(row)).toList();
   }
 
   Future addBook(Book book) async {
@@ -90,7 +85,7 @@ class BooksRepository {
     var db = await DatabaseProvider().open();
     await db.delete(
         DatabaseProvider.BOOKS_TABLE,
-        where: "id = ?",
+        where: "_id = ?",
         whereArgs: [book.id]);
     db.close();
   }
@@ -100,7 +95,7 @@ class BooksRepository {
     await db.update(
         DatabaseProvider.BOOKS_TABLE,
         book.toMap(),
-        where: "id = ?",
+        where: "_id = ?",
         whereArgs: [book.id]);
     db.close();
   }

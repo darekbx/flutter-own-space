@@ -1,7 +1,9 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/bookmanager/bloc/book.dart';
+import 'package:ownspace/bookmanager/books/book_dialog.dart';
 import 'package:ownspace/bookmanager/books/books_widget.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 
@@ -16,6 +18,8 @@ class BooksPage extends StatefulWidget {
 }
 
 class _BooksPageState extends State<BooksPage> {
+
+  GlobalKey<BooksWidgetState> _keyBooksWidget = GlobalKey();
 
   BookBloc _bookBloc;
   AppBarBloc _appBarBloc;
@@ -43,6 +47,10 @@ class _BooksPageState extends State<BooksPage> {
       Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            FloatingActionButton(
+                child: Icon(Icons.add),
+                heroTag: "add_button",
+                onPressed: () => _displayAddBookDialog()),
             _buildImportButton()
           ]),
       body: Container(
@@ -54,19 +62,19 @@ class _BooksPageState extends State<BooksPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.import_contacts),
-            title: Text(""),
+            title: Text("", style: TextStyle(fontSize: 1)),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.watch_later),
-            title: Text(""),
+            title: Text("", style: TextStyle(fontSize: 1)),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.battery_charging_full),
-            title: Text(""),
+            title: Text("", style: TextStyle(fontSize: 1)),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
-            title: Text("")
+            title: Text("", style: TextStyle(fontSize: 1))
           ),
         ],
         type: BottomNavigationBarType.fixed,
@@ -89,12 +97,62 @@ class _BooksPageState extends State<BooksPage> {
             FloatingActionButton(
                 child: Icon(Icons.import_export),
                 heroTag: "import_button",
-                onPressed: () async {
-                  _bookBloc.add(ImportBooks());
-                })
+                onPressed: () => _displayImportDialog())
           ]);
     }
     return SizedBox();
+  }
+
+  void _displayAddBookDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return BookDialog(onBookAdd: (book) {
+            _keyBooksWidget.currentState.addBook(book);
+          });
+        }
+    );
+  }
+
+  void _displayImportDialog() {
+    Widget importView = Expanded(child:Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text("Importing..."),
+        CircularProgressIndicator()
+      ],
+    ));
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: BlocProvider(
+                create: (context) => _bookBloc,
+                child: BlocBuilder<BookBloc, BookState>(
+                    builder: (context, state) {
+                      if (state is Loading) {
+                        return importView;
+                      } else if (state is InitialState) {
+                        _bookBloc.add(ImportBooks());
+                        return importView;
+                      } else if (state is Finished) {
+                        return Text("Done");
+                      } else if (state is Error) {
+                        return Text("Error, while loading task: ${state.message}");
+                      }
+                      return importView;
+                    })
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text("Close"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  })
+            ],
+          );
+        });
   }
 
   Widget _buildTitle() {
@@ -109,7 +167,7 @@ class _BooksPageState extends State<BooksPage> {
 
   Widget _buildBody() {
     if (_selectedIndex == 0) {
-      return BooksWidget();
+      return BooksWidget(key: _keyBooksWidget);
     }
 
     return Container();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/bookmanager/bloc/book.dart';
+import 'package:ownspace/bookmanager/books/book_dialog.dart';
 import 'package:ownspace/bookmanager/model/book.dart';
 
 class BooksWidget extends StatefulWidget {
@@ -13,16 +14,17 @@ class BooksWidget extends StatefulWidget {
   BooksWidget({Key key}) : super(key: key);
 
   @override
-  _BooksWidgetState createState() => _BooksWidgetState();
+  BooksWidgetState createState() => BooksWidgetState();
 }
 
-class _BooksWidgetState extends State<BooksWidget> {
+class BooksWidgetState extends State<BooksWidget> {
 
   final double _flagWidth = 4;
   final double _flagHeight = 48;
 
   TextEditingController _searchController;
   String _searchQuery;
+  int _index = 1;
   BookBloc _bookBloc;
 
   @override
@@ -46,6 +48,10 @@ class _BooksWidgetState extends State<BooksWidget> {
   @override
   Widget build(BuildContext context) {
     return _buildBody();
+  }
+
+  void addBook(Book book) {
+    _bookBloc.add(AddBook(book));
   }
 
   Widget _buildBody() {
@@ -78,6 +84,8 @@ class _BooksWidgetState extends State<BooksWidget> {
       );
     }
 
+    _index = books.length;
+
     return Column(
       children: <Widget>[
         Padding(
@@ -98,6 +106,7 @@ class _BooksWidgetState extends State<BooksWidget> {
             child: ListView.builder(
               padding: EdgeInsets.only(left: 8, right: 8),
               itemCount: books.length,
+
               itemBuilder: (context, index) {
                 Book book = books[index];
                 int nextYear = index + 1 < books.length ? books[index + 1].year : null;
@@ -138,41 +147,44 @@ class _BooksWidgetState extends State<BooksWidget> {
       }
     }
 
-    return
-      Column(
-          children: <Widget>[
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        _createIsKindleContainer(book),
-                        createOpinionContainer(book),
-                        _createIsInEnglishContainer(book),
-                        Container(width: 6)
-                      ]
-                  ),
-                  Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return InkWell(
+        onLongPress: () => _deleteDialog(book),
+        onTap: () => _displayAddBookDialog(book),
+        child: Column(
+            children: <Widget>[
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          authorWidget,
-                          titleWidget,
-                        ],
-                      )),
-                  Column(
-                    children: <Widget>[
-                      Text("${book.id}.", style: TextStyle(fontSize: 12)),
-                      Container(height: 8),
-                      Text("${book.year}", style: TextStyle(fontSize: 9))
-                    ],
-                  ),
-                ]
-            ),
-            divider,
-          ]);
+                          _createIsKindleContainer(book),
+                          createOpinionContainer(book),
+                          _createIsInEnglishContainer(book),
+                          Container(width: 6)
+                        ]
+                    ),
+                    Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            authorWidget,
+                            titleWidget,
+                          ],
+                        )),
+                    Column(
+                      children: <Widget>[
+                        Text("${_index--}.", style: TextStyle(fontSize: 12)),
+                        Container(height: 8),
+                        Text("${book.year}", style: TextStyle(fontSize: 9))
+                      ],
+                    ),
+                  ]
+              ),
+              divider,
+            ])
+    );
   }
 
   Widget createMarkedText(String text, String queryToMark, {bool isBold: false}) {
@@ -224,6 +236,43 @@ class _BooksWidgetState extends State<BooksWidget> {
   }
 
   Container _defaultContainer() => Container(width: _flagWidth);
+
+  void _displayAddBookDialog(Book book) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return BookDialog(book: book, onBookAdd: (book) {
+            debugPrint("Update book ${book.id} ${book.title}");
+            _bookBloc.add(UpdateBook(book));
+          });
+        }
+    );
+  }
+
+  void _deleteDialog(Book book) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Delete"),
+            content: Text("Delete book: ${book.author} (${book.title})?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              FlatButton(
+                  child: Text("Confirm"),
+                  onPressed: () {
+                    _bookBloc.add(DeleteBook(book));
+                    Navigator.of(context).pop();
+                  }
+              )
+            ],
+          );
+        }
+    );
+  }
 
   Widget _showStatus(String status) {
     return Center(

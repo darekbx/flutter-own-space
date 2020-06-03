@@ -28,6 +28,17 @@ class Book {
 
   bool isInEnglish() => flags.contains("3");
 
+  static String createFlags({ bool kindle: false, bool good: false, bool best: false, bool inEnglish: false }) {
+    String flags = "";
+
+    if (kindle) flags += "0";
+    if (good) flags += "1";
+    if (best) flags += "2";
+    if (inEnglish) flags += "3";
+
+    return flags;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       //'_id': id,
