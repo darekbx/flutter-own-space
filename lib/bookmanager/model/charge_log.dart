@@ -18,7 +18,7 @@ class ChargeLog {
 
   static ChargeLog fromEntity(Map<String, dynamic> entity) {
     return ChargeLog(
-        entity['id'],
+        entity['_id'],
         entity['date']
     );
   }

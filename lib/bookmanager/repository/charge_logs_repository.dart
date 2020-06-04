@@ -18,4 +18,14 @@ class ChargeLogsRepository {
     await db.insert(DatabaseProvider.BOOKS_CHARE_LOG_TABLE, chargeLog.toMap());
     db.close();
   }
+
+  Future deleteChargeLog(ChargeLog chargeLog) async {
+    var db = await DatabaseProvider().open();
+    await db.delete(
+        DatabaseProvider.BOOKS_CHARE_LOG_TABLE,
+        where: "_id = ?",
+        whereArgs: [chargeLog.id]);
+    db.close();
+  }
+
 }

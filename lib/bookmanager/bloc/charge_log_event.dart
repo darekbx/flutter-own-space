@@ -16,6 +16,12 @@ class AddChargeLog extends ChargeLogEvent {
   AddChargeLog(this.chargeLog) : super([chargeLog]);
 }
 
+class DeleteChargeLog extends ChargeLogEvent {
+  final ChargeLog chargeLog;
+  DeleteChargeLog(this.chargeLog) : super([chargeLog]);
+}
+
+
 class ListChargeLogs extends ChargeLogEvent {
   ListChargeLogs() : super([]);
 }

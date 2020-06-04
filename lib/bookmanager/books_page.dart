@@ -5,6 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/bookmanager/bloc/book.dart';
 import 'package:ownspace/bookmanager/books/book_dialog.dart';
 import 'package:ownspace/bookmanager/books/books_widget.dart';
+import 'package:ownspace/bookmanager/charge_log/charge_log_widget.dart';
+import 'package:ownspace/bookmanager/statistics/statistics_widget.dart';
+import 'package:ownspace/bookmanager/to_read/to_read_dialog.dart';
+import 'package:ownspace/bookmanager/to_read/to_read_widget.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 
 class BooksPage extends StatefulWidget {
@@ -20,6 +24,8 @@ class BooksPage extends StatefulWidget {
 class _BooksPageState extends State<BooksPage> {
 
   GlobalKey<BooksWidgetState> _keyBooksWidget = GlobalKey();
+  GlobalKey<ToReadWidgetState> _keyToReadWidget = GlobalKey();
+  GlobalKey<ChargeLogWidgetState> _keyChargeLogWidget = GlobalKey();
 
   BookBloc _bookBloc;
   AppBarBloc _appBarBloc;
@@ -50,7 +56,15 @@ class _BooksPageState extends State<BooksPage> {
             FloatingActionButton(
                 child: Icon(Icons.add),
                 heroTag: "add_button",
-                onPressed: () => _displayAddBookDialog()),
+                onPressed: () {
+                  if (_selectedIndex == 0) {
+                    _displayAddBookDialog();
+                  } else if (_selectedIndex == 1) {
+                    _displayAddToReadDialog();
+                  } else if (_selectedIndex == 2) {
+                    _keyChargeLogWidget.currentState.addEntry();
+                  }
+                }),
             _buildImportButton()
           ]),
       body: Container(
@@ -114,6 +128,17 @@ class _BooksPageState extends State<BooksPage> {
     );
   }
 
+  void _displayAddToReadDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return ToReadDialog(onToReadAdd: (toRead) {
+            _keyToReadWidget.currentState.addEntry(toRead);
+          });
+        }
+    );
+  }
+
   void _displayImportDialog() {
     Widget importView = Expanded(child:Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,8 +193,13 @@ class _BooksPageState extends State<BooksPage> {
   Widget _buildBody() {
     if (_selectedIndex == 0) {
       return BooksWidget(key: _keyBooksWidget);
+    } else if (_selectedIndex == 1) {
+      return ToReadWidget(key: _keyToReadWidget);
+    } else if (_selectedIndex == 2) {
+      return ChargeLogWidget(key: _keyChargeLogWidget);
+    } else if (_selectedIndex == 3) {
+      return StatisticsWidget();
     }
-
     return Container();
   }
 }

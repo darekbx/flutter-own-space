@@ -23,7 +23,7 @@ class ToReadRepository {
     var db = await DatabaseProvider().open();
     await db.delete(
         DatabaseProvider.BOOKS_TO_READ_TABLE,
-        where: "id = ?",
+        where: "_id = ?",
         whereArgs: [toRead.id]);
     db.close();
   }

@@ -13,13 +13,14 @@ class ToRead {
   Map<String, dynamic> toMap() {
     return {
       //'id': id,
-      'author': title
+      'author': author,
+      'title': title
     };
   }
 
   static ToRead fromEntity(Map<String, dynamic> entity) {
     return ToRead(
-        entity['id'],
+        entity['_id'],
         entity['author'],
         entity['title']
     );

@@ -21,6 +21,10 @@ class ChargeLogBloc extends Bloc<ChargeLogEvent, ChargeLogState> {
         yield Loading();
         await _chargeLogsRepository.addChargeLog(event.chargeLog);
         yield Finished();
+      } else if (event is DeleteChargeLog) {
+        yield Loading();
+        await _chargeLogsRepository.deleteChargeLog(event.chargeLog);
+        yield Finished();
       }
     } on Exception catch (e) {
       yield Error(e.toString());
