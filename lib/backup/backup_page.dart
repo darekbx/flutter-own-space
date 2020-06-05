@@ -37,15 +37,11 @@ class _BackupPageState extends State<BackupPage> {
           Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                FloatingActionButton(
-                    child: Icon(Icons.backup),
+                FloatingActionButton.extended(
+                    icon: Icon(Icons.backup),
+                    label: Text("Backup"),
                     heroTag: "backup_button",
-                    onPressed: () => _backupBloc.add(MakeBackup())),
-                SizedBox(height: 16.0),
-                FloatingActionButton(
-                    child: Icon(Icons.import_contacts),
-                    heroTag: "import_button",
-                    onPressed: () async {}),
+                    onPressed: () => _backupBloc.add(MakeBackup()))
               ]),
         )
     );

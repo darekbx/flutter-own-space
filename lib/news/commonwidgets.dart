@@ -10,7 +10,6 @@ class CommonWidgets {
         return loadingView();
       default:
         if (snapshot.hasError) {
-          print(snapshot);
           return error("${snapshot.error}");
         } else {
           if (snapshot.data == null) {

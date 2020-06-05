@@ -78,8 +78,9 @@ class _AuthorizePageState extends State<AuthorizePage> {
   Widget _errorMessage(String message) =>
       _authWidget(message, "Retry", _retryAuthentication,
           color: Colors.redAccent);
+
   Widget _displayAuthWidget() => _authWidget(
-      'Please authorize with fingerprint', "Or enter PIN", _onPinTap);
+      'Authorize', "Please enter PIN", _onPinTap);
 
   Widget _authWidget(String title, String linkedMessage, Function callback,
       {Color color = Colors.black}) {
@@ -92,7 +93,6 @@ class _AuthorizePageState extends State<AuthorizePage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Icon(Icons.fingerprint, size: 75.0, color: color),
                   Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Column(children: <Widget>[

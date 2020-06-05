@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ownspace/applications/applications_page.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 import 'package:ownspace/fuel/bloc/fuel.dart';
 import 'package:ownspace/fuel/fuel_chart_page.dart';
@@ -8,8 +9,6 @@ import 'package:ownspace/fuel/fuel_entry_dialog.dart';
 import 'package:ownspace/fuel/model/fuel_entry.dart';
 
 class FuelPage extends StatefulWidget {
-
-  final IS_IMPORT_VISIBLE = false;
 
   FuelPage({Key key}) : super(key: key);
 
@@ -196,7 +195,7 @@ class _FuelPageState extends State<FuelPage> {
   }
 
   Widget _buildImportButton() {
-    if (widget.IS_IMPORT_VISIBLE) {
+    if (ApplicationsPage.IS_IMPORT_VISIBLE) {
       return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

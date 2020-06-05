@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ownspace/applications/applications_page.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 import 'package:ownspace/weight/bloc/entry.dart';
 import 'package:ownspace/weight/chart_painter.dart';
@@ -8,8 +9,6 @@ import 'package:ownspace/weight/entries_list_page.dart';
 import 'package:ownspace/weight/entry_dialog.dart';
 
 class WeightPage extends StatefulWidget {
-
-  final IS_IMPORT_VISIBLE = false;
 
   WeightPage({Key key}) : super(key: key);
 
@@ -66,7 +65,7 @@ class _WeightPageState extends State<WeightPage> {
   }
 
   Widget _buildImportButton() {
-    if (widget.IS_IMPORT_VISIBLE) {
+    if (ApplicationsPage.IS_IMPORT_VISIBLE) {
       return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[

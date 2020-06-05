@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:ownspace/applications/bloc/summary.dart';
 import 'package:ownspace/backup/backup_page.dart';
 import 'package:ownspace/bookmanager/books_page.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
@@ -13,6 +16,8 @@ import 'package:ownspace/weight/weight_page.dart';
 
 class ApplicationsPage extends StatefulWidget {
 
+  static final IS_IMPORT_VISIBLE = false;
+
   ApplicationsPage({Key key}) : super(key: key);
 
   @override
@@ -20,6 +25,14 @@ class ApplicationsPage extends StatefulWidget {
 }
 
 class _ApplicationsPageState extends State<ApplicationsPage> {
+
+  SummaryBloc _summaryBloc;
+
+  @override
+  void initState() {
+    _summaryBloc = SummaryBloc();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +70,61 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
         color: Colors.green,
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Text("Monday, 04 May 2020\n\nBooks: 100\nDots: 15 (all 4000)\nToday's sugar: 11.5g\nLast weight: 60.2kg", style: TextStyle(color: Colors.white)),
+          child: BlocProvider(
+            create: (context) => _summaryBloc,
+            child: _createSummaryBody()
+          )
         )
+    );
+  }
+
+  Widget _createSummaryBody() {
+    var datetime = DateTime.now();
+    var dateString = DateFormat("EEEE, dd MMMM yyyy").format(datetime);
+
+    return BlocBuilder<SummaryBloc, SummaryState>(
+      builder: (context, state) {
+        if (state == SummaryLoaded || state.toString() == "SummaryLoaded") {
+          var summary = (state as SummaryLoaded).summary;
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("$dateString", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
+                Row(children: <Widget>[
+                  Text("Today's sugar: ", style: TextStyle(color: Colors.white)),
+                  Text("${summary.todaysSugar}g", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                ]),
+                Row(children: <Widget>[
+                  Text("Dots: ", style: TextStyle(color: Colors.white)),
+                  Text("${summary.dotsCount}", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                ]),
+                Row(children: <Widget>[
+                  Text("Books: ", style: TextStyle(color: Colors.white)),
+                  Text("${summary.booksCount}", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                ]),
+                Row(children: <Widget>[
+                  Text("Last weights: ", style: TextStyle(color: Colors.white)),
+                  Text("${summary.lastWeights.join("kg / ")}kg", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                ]),
+              ]
+          );
+        } else if (state == Error || state.toString() == "Error") {
+          return _showStatus("Error");
+        } else if (state == Loading || state.toString() == "Loading") {
+          return _showStatus("Loading");
+        } else if (state == InitialSummaryState || state.toString() == "InitialSummaryState") {
+          _summaryBloc.add(LoadSummary());
+          return _showStatus("Loading");
+        }
+        return _showStatus("unknown $state");
+      },
+    );
+  }
+
+  Widget _showStatus(String status) {
+    return Center(
+      child: Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
     );
   }
 

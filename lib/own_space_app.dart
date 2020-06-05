@@ -8,7 +8,7 @@ class OwnSpaceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Own Space',
+      title: '.',
       theme: ThemeData(
         fontFamily: 'Baloo',
         primarySwatch: Colors.green,

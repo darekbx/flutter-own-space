@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ownspace/applications/applications_page.dart';
 import 'package:ownspace/tasks/bloc/task.dart';
 import 'package:ownspace/tasks/model/task.dart';
 import 'package:ownspace/tasks/task_page.dart';
 
 class TasksPage extends StatefulWidget {
-
-  final IS_IMPORT_VISIBLE = false;
 
   TasksPage({Key key}) : super(key: key);
 
@@ -57,10 +56,10 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   FloatingActionButton _createImportButton() {
-    if (widget.IS_IMPORT_VISIBLE) {
+    if (ApplicationsPage.IS_IMPORT_VISIBLE) {
       return FloatingActionButton(
         onPressed: () => _taskBloc.add(ImportTasks()),
-        child: Icon(Icons.add),
+        child: Icon(Icons.import_export),
       );
     } else {
       return null;

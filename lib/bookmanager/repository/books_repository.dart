@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ownspace/bookmanager/model/book.dart';
 import 'package:ownspace/bookmanager/model/charge_log.dart';
 import 'package:ownspace/bookmanager/model/to_read.dart';
+import 'package:ownspace/bookmanager/model/year_summary.dart';
 import 'package:ownspace/common/database/database_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
@@ -64,6 +65,29 @@ class BooksRepository {
     });
 
     await db.close();
+  }
+
+  Future<int> countBooks() async {
+    var db = await DatabaseProvider().open();
+    final result = await db.rawQuery("SELECT COUNT(*) AS `count` FROM ${DatabaseProvider.BOOKS_TABLE}");
+    db.close();
+    return result[0]['count'] as int;
+  }
+
+
+  Future<List<YearSummary>> yearStatistics() async {
+    var db = await DatabaseProvider().open();
+    var cursor = await db.rawQuery("SELECT COUNT(_id) AS `count`, `year` FROM books GROUP BY year ORDER BY year");
+    var english = await db.rawQuery("SELECT COUNT(flags) AS `count`, `year` FROM books WHERE flags LIKE \'%3%\' GROUP BY year ORDER BY year");
+    db.close();
+
+    var result = cursor.map((row) => YearSummary.fromEntity(row)).toList();
+
+    english.forEach((row) {
+      result.firstWhere((item) => item.year == row['year']).englishCount = row['count'];
+    });
+
+    return result;
   }
 
   Future<List<Book>> fetchBooks() async {

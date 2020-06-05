@@ -33,6 +33,10 @@ class BookBloc extends Bloc<BookEvent, BookState> {
         yield Loading();
         await _booksRepository.import();
         yield Finished();
+      } else if (event is LoadYearSummary) {
+        yield Loading();
+        var result = await _booksRepository.yearStatistics();
+        yield YearSummaryFinished(result);
       }
     } on Exception catch (e) {
       yield Error(e.toString());

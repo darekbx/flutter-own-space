@@ -182,7 +182,6 @@ class BooksWidgetState extends State<BooksWidget> {
                     ),
                   ]
               ),
-              divider,
             ])
     );
   }
@@ -242,7 +241,6 @@ class BooksWidgetState extends State<BooksWidget> {
         context: context,
         builder: (BuildContext context) {
           return BookDialog(book: book, onBookAdd: (book) {
-            debugPrint("Update book ${book.id} ${book.title}");
             _bookBloc.add(UpdateBook(book));
           });
         }

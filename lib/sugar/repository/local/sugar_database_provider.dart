@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:ownspace/common/database/database_provider.dart';
+import 'package:ownspace/sugar/date_utils.dart';
 import 'package:ownspace/sugar/model/entry.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -30,6 +31,22 @@ class SugarDatabaseProvider {
 
   Future<int> add(Entry entry) async =>
       await (await database).insert(DatabaseProvider.SUGAR_TABLE, entry.toMap());
+
+  Future<double> todaysSugar() async {
+    var date = DateTime.now();
+    var nowString = DateUtils.formatDate(date);
+    var query = """
+      SELECT 
+        SUM(sugar) AS sum, strftime('%Y-%m-%d',DATETIME(timestamp/1000, 'unixepoch')) AS `date`
+      FROM ${DatabaseProvider.SUGAR_TABLE} 
+      WHERE `date` = '${nowString}'
+      """;
+    var cursor = await (await database).rawQuery(query);
+    if (cursor.length == 0 || cursor[0]['sum'] == null) {
+      return 0.0;
+    }
+    return cursor[0]['sum'] as double;
+  }
 
   Future<List<double>> daySummary() async {
     var query = """

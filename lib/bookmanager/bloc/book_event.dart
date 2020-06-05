@@ -33,3 +33,7 @@ class UpdateBook extends BookEvent {
 class ListBooks extends BookEvent {
   ListBooks() : super([]);
 }
+
+class LoadYearSummary extends BookEvent {
+  LoadYearSummary() : super([]);
+}

@@ -19,8 +19,16 @@ class EntriesRepository {
   Future<List<Entry>> fetchEntriesFromBackup(String contentsString) async {
     return Future(() {
       List<dynamic> contents = jsonDecode(contentsString);
-      return contents.map((row) => Entry(row['id'], row['date'], row['weight'], row['type'])).toList();
+      return contents.map((row) => Entry(row['mId'], row['mDate'], row['mWeight'], row['mType'])).toList();
     });
+  }
+
+  Future<List<Entry>> fetchLastThree() async {
+    var db = await DatabaseProvider().open();
+    final List<Map<String, dynamic>> cursor =
+    await db.query(DatabaseProvider.ENTRIES_TABLE, limit: 3, orderBy: "id DESC", groupBy: "type");
+    db.close();
+    return cursor.map((row) => Entry.fromEntity(row)).toList();
   }
 
   Future<List<Entry>> fetchEntries() async {

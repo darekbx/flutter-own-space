@@ -79,7 +79,6 @@ class EncryptedStorage {
         where: "key = ?",
         whereArgs: [key]
     );
-    debugPrint(cursor[0]['account']);
     db.close();
     return Secret(
         account: _encryption.decrypt(cursor[0]['account']),

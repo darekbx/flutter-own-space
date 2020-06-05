@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ownspace/applications/applications_page.dart';
 import 'package:ownspace/bookmanager/bloc/book.dart';
 import 'package:ownspace/bookmanager/books/book_dialog.dart';
 import 'package:ownspace/bookmanager/books/books_widget.dart';
@@ -12,8 +13,6 @@ import 'package:ownspace/bookmanager/to_read/to_read_widget.dart';
 import 'package:ownspace/common/bloc/appbar_bloc.dart';
 
 class BooksPage extends StatefulWidget {
-
-  final IS_IMPORT_VISIBLE = true;
 
   BooksPage({Key key}) : super(key: key);
 
@@ -53,7 +52,7 @@ class _BooksPageState extends State<BooksPage> {
       Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            FloatingActionButton(
+            _selectedIndex < 3 ? FloatingActionButton(
                 child: Icon(Icons.add),
                 heroTag: "add_button",
                 onPressed: () {
@@ -64,7 +63,7 @@ class _BooksPageState extends State<BooksPage> {
                   } else if (_selectedIndex == 2) {
                     _keyChargeLogWidget.currentState.addEntry();
                   }
-                }),
+                }) : Container(),
             _buildImportButton()
           ]),
       body: Container(
@@ -101,7 +100,7 @@ class _BooksPageState extends State<BooksPage> {
   }
 
   Widget _buildImportButton() {
-    if (widget.IS_IMPORT_VISIBLE) {
+    if (ApplicationsPage.IS_IMPORT_VISIBLE) {
       return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
