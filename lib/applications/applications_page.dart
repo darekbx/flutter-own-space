@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:ownspace/allegro_observer/filters_page.dart';
 import 'package:ownspace/applications/bloc/summary.dart';
 import 'package:ownspace/backup/backup_page.dart';
 import 'package:ownspace/bookmanager/books_page.dart';
@@ -93,7 +94,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 Text("$dateString", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
                 Row(children: <Widget>[
                   Text("Today's sugar: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.todaysSugar}g", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                  Text("${summary.todaysSugar.toStringAsFixed(1)}g", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
                 ]),
                 Row(children: <Widget>[
                   Text("Dots: ", style: TextStyle(color: Colors.white)),
@@ -105,7 +106,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 ]),
                 Row(children: <Widget>[
                   Text("Last weights: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.lastWeights.join("kg / ")}kg", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
+                  Text("${summary.lastWeights.map((e) => e.toStringAsFixed(1)).join("kg / ")}kg", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
                 ]),
               ]
           );
@@ -177,7 +178,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           bottom: true),
                     ]),
                     Row(children: <Widget>[
-                      menuItem("icons/ic_allegro.png", "Allegro Observer", right: true),
+                      menuItem("icons/ic_allegro.png", "Allegro Observer",
+                          callback: () { redirect(FiltersPage()); },
+                          right: true),
                       menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),
                       menuItem("icons/ic_backup.png", "Backup",
                         callback: () { redirect(BackupPage()); },),

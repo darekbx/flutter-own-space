@@ -37,12 +37,12 @@ class BackupCreator {
 
   /**
    * Restore uses external storage directory:
-   * /Android/data/com.darekbx.ownspace/files/backup_
+   * /Android/data/com.darekbx.ownspace/files/own_space_
    */
   Future<List<BackupFile>> listBackupFiles() async {
     Directory dir = await getExternalStorageDirectory();
     return dir.list()
-        .where((file) => file.path.contains("backup_"))
+        .where((file) => file.path.contains("own_space_backup_"))
         .asyncMap((file) async => await mapToBackupFile(file))
         .toList();
   }
@@ -75,7 +75,7 @@ class BackupCreator {
 
   Future<String> _createBackupFile() async {
     Directory dir = await getExternalStorageDirectory();
-    return "${dir.path}/backup_${millisecondsSinceEpoch()}.zip";
+    return "${dir.path}/own_space_${millisecondsSinceEpoch()}.zip";
   }
 
   Future<File> _createReadmeFile() async {

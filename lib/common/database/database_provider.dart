@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 7;
+  final int DB_VERSION = 8;
 
   static final String DB_NAME = "own-space.db";
   static final String NOTES_TABLE = "notes";
@@ -17,6 +17,8 @@ class DatabaseProvider {
   static final String BOOKS_TABLE = "books";
   static final String BOOKS_TO_READ_TABLE = "books_to_read";
   static final String BOOKS_CHARE_LOG_TABLE = "books_charge_log";
+  static final String ALLEGRO_FILTER_TABLE = "allegro_filter";
+  static final String ALLEGRO_ITEM_TABLE = "allegro_item";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -40,6 +42,8 @@ class DatabaseProvider {
     await _createBooksTable(db);
     await _createBooksToReadTable(db);
     await _createBooksChargeLogTable(db);
+    await _createAllegroFilterTable(db);
+    await _createAllegroItemTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -54,6 +58,8 @@ class DatabaseProvider {
     await _createBooksTable(db);
     await _createBooksToReadTable(db);
     await _createBooksChargeLogTable(db);
+    await _createAllegroFilterTable(db);
+    await _createAllegroItemTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -163,5 +169,33 @@ class DatabaseProvider {
       `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
       `date` TEXT
     )""");
+  }
+
+
+  Future _createAllegroFilterTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE $ALLEGRO_FILTER_TABLE (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        keyword TEXT NULL,
+        priceFrom DOUBLE NULL,
+        priceTo DOUBLE NULL,
+        searchInDescription INTEGER DEFAULT 0,
+        searchUsed INTEGER DEFAULT 0,
+        searchNew INTEGER DEFAULT 1,
+        categoryName TEXT NOT NULL,
+        categoryId TEXT NOT NULL
+      )
+      ''');
+  }
+
+  Future _createAllegroItemTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE $ALLEGRO_ITEM_TABLE (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        allegroId TEXT NULL,
+        isNew INTEGER DEFAULT 0,
+        filterId INTEGER
+      )
+    ''');
   }
 }
