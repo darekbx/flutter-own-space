@@ -191,8 +191,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     );
   }
 
-  void redirect(Widget page) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+  void redirect(Widget page) async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => page));
+    _summaryBloc.add(LoadSummary());
   }
 
   Widget menuItem(String assetName, String text,
