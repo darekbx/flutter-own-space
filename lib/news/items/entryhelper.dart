@@ -26,14 +26,15 @@ class EntryHelper {
     var divider;
     if (extended) {
       divider = Divider();
+      var color = link["is_hot"] == true ? Colors.red : Colors.black;
       title = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
                 padding: EdgeInsets.only(bottom: 8, top: 8),
-                child: Text(link["title"],
+                child: Text("${link["title"]}",
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)))
           ]);
     }
     bool notNull(Object o) => o != null;
