@@ -10,6 +10,8 @@ import 'package:sqflite/sqflite.dart';
 
 class BackupCreator {
 
+  var filePrefix = "own_space_backup_";
+
   /**
    * Backup file is a zip file with password, contains:
    *  - README.md
@@ -37,12 +39,12 @@ class BackupCreator {
 
   /**
    * Restore uses external storage directory:
-   * /Android/data/com.darekbx.ownspace/files/own_space_
+   * /Android/data/com.darekbx.ownspace/files/own_space_backup_
    */
   Future<List<BackupFile>> listBackupFiles() async {
     Directory dir = await getExternalStorageDirectory();
     return dir.list()
-        .where((file) => file.path.contains("own_space_backup_"))
+        .where((file) => file.path.contains(filePrefix))
         .asyncMap((file) async => await mapToBackupFile(file))
         .toList();
   }
@@ -75,7 +77,7 @@ class BackupCreator {
 
   Future<String> _createBackupFile() async {
     Directory dir = await getExternalStorageDirectory();
-    return "${dir.path}/own_space_${millisecondsSinceEpoch()}.zip";
+    return "${dir.path}/${filePrefix}${millisecondsSinceEpoch()}.zip";
   }
 
   Future<File> _createReadmeFile() async {
