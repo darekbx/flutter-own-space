@@ -12,6 +12,8 @@ import 'package:ownspace/news/readerpage.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
 import 'package:ownspace/passwordvault/authorize/authorizepage.dart';
 import 'package:ownspace/sugar/sugar_page.dart';
+import 'package:ownspace/supplies/bloc/supply.dart' as supply;
+import 'package:ownspace/supplies/supplies_page.dart';
 import 'package:ownspace/tasks/tasks_page.dart';
 import 'package:ownspace/weight/weight_page.dart';
 
@@ -28,10 +30,12 @@ class ApplicationsPage extends StatefulWidget {
 class _ApplicationsPageState extends State<ApplicationsPage> {
 
   SummaryBloc _summaryBloc;
+  supply.SupplyBloc _supplyBloc;
 
   @override
   void initState() {
     _summaryBloc = SummaryBloc();
+    _supplyBloc = supply.SupplyBloc();
     super.initState();
   }
 
@@ -46,7 +50,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 children: <Widget>[
                   Container(
                       width: double.infinity,
-                      height: 200.0,
+                      height: 180.0,
                       child: Padding(
                           padding: EdgeInsets.all(16.0), child: statusCard())
                       ),
@@ -86,6 +90,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     return BlocBuilder<SummaryBloc, SummaryState>(
       builder: (context, state) {
         if (state == SummaryLoaded || state.toString() == "SummaryLoaded") {
+          _supplyBloc.add(supply.FetchLowSupplies());
           var summary = (state as SummaryLoaded).summary;
           return Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -95,10 +100,6 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 Row(children: <Widget>[
                   Text("Today's sugar: ", style: TextStyle(color: Colors.white)),
                   Text("${summary.todaysSugar.toStringAsFixed(1)}g", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
-                ]),
-                Row(children: <Widget>[
-                  Text("Dots: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.dotsCount}", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
                 ]),
                 Row(children: <Widget>[
                   Text("Books: ", style: TextStyle(color: Colors.white)),
@@ -153,7 +154,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                       menuItem("icons/ic_sugar.png", "Sugar",
                           callback: () { redirect(SugarPage()); },
                           right: true, bottom: true),
-                      menuItem("icons/ic_news.png", "Dots", bottom: true),
+                      suppliesItem(
+                          callback: () { redirect(SuppliesPage()); },
+                          bottom: true),
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_books.png", "Books",
@@ -194,6 +197,66 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   void redirect(Widget page) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     _summaryBloc.add(LoadSummary());
+  }
+
+  Widget suppliesItem({Function callback, left: false, right: false, top: false, bottom: false, hidden: false}) {
+    return BlocProvider(
+        create: (context) => _supplyBloc,
+        child: _createSuppliesBody(callback: callback)
+    );
+  }
+
+  Widget _createSuppliesBody({Function callback}) {
+    BorderSide defaultBorder = BorderSide(color: Colors.black38, width: 0.5);
+    return BlocBuilder<supply.SupplyBloc, supply.SupplyState>(
+      builder: (context, state) {
+        if (state == supply.SuppliesLoaded || state.toString() == "SuppliesLoaded") {
+          var lowSupplies = (state as supply.SuppliesLoaded)
+              .entries
+              .map((supply) => "${supply.name} (${supply.amount})")
+              .join("\n");
+
+          var color = lowSupplies == "" ? Colors.black : Colors.red;
+          var text = lowSupplies == "" ? "Supplies are full" : lowSupplies;
+
+          return SizedBox(
+              height: 106,
+              width: 123.7,
+              child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                        right: false ? defaultBorder : BorderSide.none,
+                        bottom: true ? defaultBorder : BorderSide.none,
+                        top: false ? defaultBorder : BorderSide.none,
+                        left: false ? defaultBorder : BorderSide.none
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Container(child:
+                        Text(text, style: TextStyle(
+                            color: color, fontSize: 10, fontWeight: FontWeight.w500))
+                        ),
+                      ),
+                      onTap: () {
+                        callback();
+                      }
+                  )
+              )
+          );
+        } else if (state == supply.Error || state.toString() == "Error") {
+          return _showStatus("Error");
+        } else if (state == supply.Loading || state.toString() == "Loading") {
+          return _showStatus("Loading");
+        } else if (state == supply.InitialSupplyState || state.toString() == "InitialSupplyState") {
+          //_supplyBloc.add(supply.FetchLowSupplies());
+          return _showStatus("Loading");
+        }
+        return _showStatus("unknown $state");
+      },
+    );
   }
 
   Widget menuItem(String assetName, String text,

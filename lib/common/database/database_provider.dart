@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider {
 
-  final int DB_VERSION = 8;
+  final int DB_VERSION = 9;
 
   static final String DB_NAME = "own-space.db";
   static final String NOTES_TABLE = "notes";
@@ -19,6 +19,7 @@ class DatabaseProvider {
   static final String BOOKS_CHARE_LOG_TABLE = "books_charge_log";
   static final String ALLEGRO_FILTER_TABLE = "allegro_filter";
   static final String ALLEGRO_ITEM_TABLE = "allegro_item";
+  static final String SUPPLY_TABLE = "supply";
 
   Future<Database> open() async {
     String path = await getDatabasesPath();
@@ -44,6 +45,7 @@ class DatabaseProvider {
     await _createBooksChargeLogTable(db);
     await _createAllegroFilterTable(db);
     await _createAllegroItemTable(db);
+    await _createSupplyTable(db);
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -60,6 +62,7 @@ class DatabaseProvider {
     await _createBooksChargeLogTable(db);
     await _createAllegroFilterTable(db);
     await _createAllegroItemTable(db);
+    await _createSupplyTable(db);
   }
 
   Future _createEntriesTable(Database db) async {
@@ -174,7 +177,7 @@ class DatabaseProvider {
 
   Future _createAllegroFilterTable(Database db) async {
     await db.execute('''
-      CREATE TABLE $ALLEGRO_FILTER_TABLE (
+      CREATE TABLE IF NOT EXISTS $ALLEGRO_FILTER_TABLE (
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         keyword TEXT NULL,
         priceFrom DOUBLE NULL,
@@ -190,7 +193,7 @@ class DatabaseProvider {
 
   Future _createAllegroItemTable(Database db) async {
     await db.execute('''
-      CREATE TABLE $ALLEGRO_ITEM_TABLE (
+      CREATE TABLE IF NOT EXISTS $ALLEGRO_ITEM_TABLE (
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
         allegroId TEXT NULL,
         isNew INTEGER DEFAULT 0,
@@ -198,4 +201,15 @@ class DatabaseProvider {
       )
     ''');
   }
+
+  Future _createSupplyTable(Database db) async {
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS $SUPPLY_TABLE (
+      `id` INTEGER PRIMARY KEY AUTOINCREMENT, 
+      `name` TEXT,
+      `amount` INTEGER)
+    ''');
+  }
+
+
 }

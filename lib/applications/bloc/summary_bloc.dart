@@ -26,12 +26,11 @@ class SummaryBloc extends Bloc<SummaryEvent, SummaryState> {
 
   Future<Summary> _loadSummary() async {
     int booksCount = await BooksRepository().countBooks();
-    int dotsCount = 0; // TODO
     double todaysSugar = await SugarDatabaseProvider.instance.todaysSugar();
     List<double> lastWeights = (await EntriesRepository().fetchLastThree())
         .map((entry) => entry.weight)
         .toList();
 
-    return Summary(booksCount, dotsCount, todaysSugar, lastWeights);
+    return Summary(booksCount, todaysSugar, lastWeights);
   }
 }
