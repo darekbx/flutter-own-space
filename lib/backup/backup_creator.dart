@@ -72,7 +72,7 @@ class BackupCreator {
   Future<BackupFile> mapToBackupFile(FileSystemEntity file) async {
     var stat = (await file.stat());
     var fileName = file.path.substring(file.path.lastIndexOf("/") + 1);
-    return BackupFile(fileName, file.path, stat.modified);
+    return BackupFile(fileName, file.path, stat.modified, false);
   }
 
   Future<String> _createBackupFile() async {

@@ -99,6 +99,7 @@ class _BackupPageState extends State<BackupPage> {
         return ListTile(
                 title: Text("${files[index].name}"),
                 subtitle: Text("${files[index].modified}"),
+                trailing: files[index].storedOnGDrive ? Text("[GDrive]") : Text(""),
                 onTap: () => _restoreConfirmation(files[index]),
             );
       },
