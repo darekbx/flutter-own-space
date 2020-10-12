@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ownspace/news/model/savedlink.dart';
 import 'package:ownspace/news/repository/localstorage.dart';
+import 'package:ownspace/news/repository/news_database_provider.dart';
 import 'entryhelper.dart';
 import 'dart:convert';
 import 'package:ownspace/news/api/api.dart';
@@ -69,13 +71,35 @@ class _ItemsListState extends State<ItemsList> {
         body: Padding(
             padding: EdgeInsets.only(top: 8),
             child: ListView.separated(
-              controller: _scrollController,
-              separatorBuilder: (BuildContext context, index) =>
-                  Divider(color: Colors.black),
-              itemCount: _itemsList.length,
-              itemBuilder: (BuildContext context, index) =>
-                  _buildItem(context, _itemsList[index]),
+                controller: _scrollController,
+                separatorBuilder: (BuildContext context, index) =>
+                    Divider(color: Colors.black),
+                itemCount: _itemsList.length,
+                itemBuilder: (BuildContext context, index) =>
+                    InkWell(
+                      child: _buildItem(context, _itemsList[index]),
+                      onLongPress: () async {
+                        var link = _itemsList[index];
+                        _saveLink(link);
+
+                        Scaffold.of(context).showSnackBar(new SnackBar(
+                            content: new Text("Link ${link["id"]} added")
+                        ));
+                      },
+                    )
             )));
+  }
+
+  void _saveLink(dynamic row) async {
+    var type = row["type"];
+    if (type == "entry") {
+      // TODO
+    } else if (type == "link") {
+      var item = row["link"];
+      var savedLink = SavedLink(
+          null, item["id"], item["title"], item["description"], item["preview"]);
+      await NewsDatabaseProvider.instance.add(savedLink);
+    }
   }
 
   Widget _buildItem(BuildContext context, dynamic row) {
@@ -83,7 +107,7 @@ class _ItemsListState extends State<ItemsList> {
     if (type == "entry") {
       return widget.entryHelper.buildEntry(context, row["entry"]);
     } else if (type == "link") {
-      return widget.entryHelper.buildLink(context, row["link"]);
+      return widget.entryHelper.buildLink(context, row["link"], extended: true);
     }
     return Text("Unknown type");
   }

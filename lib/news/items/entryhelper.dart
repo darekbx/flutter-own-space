@@ -10,7 +10,7 @@ class EntryHelper {
     if (type == "entry") {
       return buildEntry(context, item, hideComments: hideComments);
     } else {
-      return buildLink(context, item, hideComments: hideComments);
+      return buildLink(context, item, hideComments: hideComments, extended: true);
     }
   }
 
@@ -75,7 +75,11 @@ class EntryHelper {
     if (embed != null && embed["preview"] != null) {
       var preview = embed["preview"];
       var url = embed["url"];
-      return _createPreviewImage(preview, url);
+      if (embed["animated"] == true) {
+        return _createPreviewGif(preview, url);
+      } else {
+        return _createPreviewImage(preview, url);
+      }
     }
     return Text("");
   }
@@ -88,6 +92,21 @@ class EntryHelper {
         child: Image.network(previewUrl),
         onTap: () {
           launchURL(url);
+        });
+  }
+
+  Widget _createPreviewGif(String previewUrl, String url) {
+    if (url == null) {
+      return Text("Invalid gif!");
+    }
+
+    var previewGifUrl = previewUrl.replaceAll(".jpg", ".gif");
+    var gifUrl = url.replaceAll(".jpg", ".gif");
+
+    return InkWell(
+        child: Image.network(previewGifUrl),
+        onTap: () {
+          launchURL(gifUrl);
         });
   }
 
