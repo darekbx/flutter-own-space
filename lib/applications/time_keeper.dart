@@ -6,14 +6,23 @@ class TimeKeeper {
   final MAX_HOUR = 17;
 
   final String _newsKey = "newsKey";
-
-  void setNewsTime() async {
-    var preferences = await SharedPreferences.getInstance();
-    await preferences.setInt(_newsKey, DateTime.now().millisecondsSinceEpoch);
-  }
+  final String _allegroKey = "allegroKey";
 
   Future<bool> canOpenNews() async {
-    var lastOpenTime = (await SharedPreferences.getInstance()).getInt(_newsKey);
+    return await _canOpen(_newsKey);
+  }
+
+  Future<bool> canOpenAllegro() async {
+    return await _canOpen(_allegroKey);
+  }
+
+  void _setTime(String key) async {
+    var preferences = await SharedPreferences.getInstance();
+    await preferences.setInt(key, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  Future<bool> _canOpen(String key) async {
+    var lastOpenTime = (await SharedPreferences.getInstance()).getInt(key);
 
     if (lastOpenTime == null) {
       lastOpenTime = 0;
@@ -26,7 +35,7 @@ class TimeKeeper {
     if (currentHour >= MIN_HOUR && currentHour <= MAX_HOUR) {
       if (now - lastOpenTime > OFFSET) {
         canOpen = true;
-        await setNewsTime();
+        await _setTime(key);
       }
     } else {
       canOpen = true;

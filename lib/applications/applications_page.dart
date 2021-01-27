@@ -190,7 +190,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     Row(children: <Widget>[
                       menuItem("icons/ic_allegro.png", "Allegro Observer",
                           callback: () {
-                            TimeKeeper().canOpenNews().then((canOpen) {
+                            TimeKeeper().canOpenAllegro().then((canOpen) {
                               if (canOpen) {
                                 redirect(FiltersPage());
                               }
