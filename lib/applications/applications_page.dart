@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:ownspace/allegro_observer/filters_page.dart';
 import 'package:ownspace/applications/bloc/summary.dart';
+import 'package:ownspace/applications/time_keeper.dart';
 import 'package:ownspace/backup/backup_page.dart';
 import 'package:ownspace/bookmanager/books_page.dart';
 import 'package:ownspace/fuel/fuel_page.dart';
@@ -149,7 +150,13 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       menuItem("icons/ic_news.png", "News reader",
-                          callback: () { redirect(ReaderPage()); },
+                          callback: () {
+                            TimeKeeper().canOpenNews().then((canOpen) {
+                              if (canOpen) {
+                                redirect(ReaderPage());
+                              }
+                            });
+                          },
                           right: true, bottom: true),
                       menuItem("icons/ic_sugar.png", "Sugar",
                           callback: () { redirect(SugarPage()); },
@@ -182,7 +189,13 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_allegro.png", "Allegro Observer",
-                          callback: () { redirect(FiltersPage()); },
+                          callback: () {
+                            TimeKeeper().canOpenNews().then((canOpen) {
+                              if (canOpen) {
+                                redirect(FiltersPage());
+                              }
+                            });
+                          },
                           right: true),
                       menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),
                       menuItem("icons/ic_backup.png", "Backup",

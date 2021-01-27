@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:ownspace/common/database/database_provider.dart';
-import 'package:ownspace/sugar/date_utils.dart';
+import 'package:ownspace/sugar/own_space_date_utils.dart';
 import 'package:ownspace/sugar/model/entry.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -34,7 +34,7 @@ class SugarDatabaseProvider {
 
   Future<double> todaysSugar() async {
     var date = DateTime.now();
-    var nowString = DateUtils.formatDate(date);
+    var nowString = OwnSpaceDateUtils.formatDate(date);
     var query = """
       SELECT 
         SUM(sugar) AS sum, strftime('%Y-%m-%d',DATETIME(timestamp/1000, 'unixepoch')) AS `date`

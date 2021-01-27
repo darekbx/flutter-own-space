@@ -75,7 +75,7 @@ class EntryHelper {
     if (embed != null && embed["preview"] != null) {
       var preview = embed["preview"];
       var url = embed["url"];
-      if (embed["type"] == "video") {
+      if (embed["animated"] == true) {
         return _createPreviewGif(preview, url);
       } else {
         return _createPreviewImage(preview, url);
@@ -100,11 +100,12 @@ class EntryHelper {
       return Text("Invalid gif!");
     }
 
+    var previewGifUrl = previewUrl.replaceAll(".jpg", ".gif");
     var gifUrl = url.replaceAll(".jpg", ".gif");
 
     return InkWell(
         child: Stack(children: <Widget>[
-          Image.network(previewUrl),
+          Image.network(previewGifUrl),
           Icon(Icons.movie, color: Colors.red)
         ]),
         onTap: () {

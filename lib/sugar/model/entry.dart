@@ -1,5 +1,5 @@
 
-import 'package:ownspace/sugar/date_utils.dart';
+import 'package:ownspace/sugar/own_space_date_utils.dart';
 
 class Entry {
   
@@ -12,7 +12,7 @@ class Entry {
 
   String dateTime() {
     var date = new DateTime.fromMillisecondsSinceEpoch(timestamp);
-    return DateUtils.formatDate(date);
+    return OwnSpaceDateUtils.formatDate(date);
   }
 
   factory Entry.fromMap(Map<String, dynamic> row) =>

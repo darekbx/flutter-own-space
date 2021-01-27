@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ownspace/sugar/model/entry.dart';
 import 'color_tool.dart';
-import 'date_utils.dart';
+import 'own_space_date_utils.dart';
 import 'settings_page.dart';
 
 class Summary extends StatelessWidget {
@@ -22,7 +22,7 @@ class Summary extends StatelessWidget {
 
   double _todaysSugar() {
     var date = DateTime.now();
-    var nowString = DateUtils.formatDate(date);
+    var nowString = OwnSpaceDateUtils.formatDate(date);
 
     double sum = 0.0;
     entries.forEach((entry) {

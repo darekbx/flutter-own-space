@@ -1,4 +1,4 @@
-class DateUtils {
+class OwnSpaceDateUtils {
 
   static String formatDate(DateTime date) {
     var month = date.month.toString().padLeft(2, '0');
