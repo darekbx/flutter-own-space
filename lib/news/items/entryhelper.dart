@@ -34,7 +34,7 @@ class EntryHelper {
                 padding: EdgeInsets.only(bottom: 8, top: 8),
                 child: Text("${link["title"]}",
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)))
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)))
           ]);
     }
     bool notNull(Object o) => o != null;
@@ -46,6 +46,8 @@ class EntryHelper {
               title,
               createEmbed(
                   {"url": link["source_url"], "preview": preview}),
+              Text(link["source_url"],
+                  style: TextStyle(fontSize: 12)),
               _buildContents(context, link, hideComments: hideComments),
               divider
             ].where(notNull).toList()));
@@ -62,6 +64,8 @@ class EntryHelper {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 createEmbed(embed),
+                Text(embed["url"],
+                    style: TextStyle(fontSize: 12)),
                 _buildContents(context, entry, hideComments: hideComments)
               ]));
     } else {
