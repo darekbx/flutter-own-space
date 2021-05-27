@@ -90,7 +90,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
     return BlocBuilder<SummaryBloc, SummaryState>(
       builder: (context, state) {
-        if (state == SummaryLoaded || state.toString() == "SummaryLoaded") {
+        if (state is SummaryLoaded) {
           _supplyBloc.add(supply.FetchLowSupplies());
           var summary = (state as SummaryLoaded).summary;
           return Column(
@@ -112,11 +112,11 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                 ]),
               ]
           );
-        } else if (state == Error || state.toString() == "Error") {
+        } else if (state is Error) {
           return _showStatus("Error");
-        } else if (state == Loading || state.toString() == "Loading") {
+        } else if (state is Loading) {
           return _showStatus("Loading");
-        } else if (state == InitialSummaryState || state.toString() == "InitialSummaryState") {
+        } else if (state is InitialSummaryState) {
           _summaryBloc.add(LoadSummary());
           return _showStatus("Loading");
         }
@@ -223,7 +223,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     BorderSide defaultBorder = BorderSide(color: Colors.black38, width: 0.5);
     return BlocBuilder<supply.SupplyBloc, supply.SupplyState>(
       builder: (context, state) {
-        if (state == supply.SuppliesLoaded || state.toString() == "SuppliesLoaded") {
+        if (state is supply.SuppliesLoaded) {
           var lowSupplies = (state as supply.SuppliesLoaded)
               .entries
               .map((supply) => "${supply.name} (${supply.amount})")
@@ -259,11 +259,11 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                   )
               )
           );
-        } else if (state == supply.Error || state.toString() == "Error") {
+        } else if (state is supply.Error) {
           return _showStatus("Error");
-        } else if (state == supply.Loading || state.toString() == "Loading") {
+        } else if (state is supply.Loading) {
           return _showStatus("Loading");
-        } else if (state == supply.InitialSupplyState || state.toString() == "InitialSupplyState") {
+        } else if (state is supply.InitialSupplyState) {
           //_supplyBloc.add(supply.FetchLowSupplies());
           return _showStatus("Loading");
         }

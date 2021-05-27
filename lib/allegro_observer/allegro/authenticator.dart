@@ -18,7 +18,7 @@ class Authenticator {
       "Authorization": "Basic $basicToken",
       "Content-Type": "application/x-www-form-urlencoded" 
     };
-    var response = await http.post(_authUrl, headers: headers, body: "client_id=$clientId");
+    var response = await http.post(Uri.parse(_authUrl), headers: headers, body: "client_id=$clientId");
     var jsonMap = json.decode(response.body); 
     if (jsonMap["error"] != null) {
       return jsonMap;
@@ -33,7 +33,7 @@ class Authenticator {
       "Authorization": "Basic $basicToken",
       "Content-Type": "application/x-www-form-urlencoded" 
     };
-    var response = await http.post(_tokenUrl, headers: headers);
+    var response = await http.post(Uri.parse(_tokenUrl), headers: headers);
     var jsonMap = json.decode(response.body);
     print(jsonMap);
     if (jsonMap["error"] != null) {

@@ -18,7 +18,7 @@ class AllegroCategories {
     var headers =  { 
       "Content-Type": "application/vnd.allegro.public.v1+json",
       "Authorization": "Bearer $token" };
-    var response = await http.get(address, headers: headers);
+    var response = await http.get(Uri.parse(address), headers: headers);
     if (response.statusCode == HttpStatus.ok) {
       var jsonMap = json.decode(response.body);
       return CategoryWrapper.fromJson(jsonMap);

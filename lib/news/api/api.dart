@@ -53,7 +53,7 @@ class Api {
       return cachedContents;
     }
 
-    var response = await get(url);
+    var response = await get(Uri.parse(url));
     if (response.statusCode == HttpStatus.ok) {
       var contents = response.body;
       ApiCache.add(key, contents);
