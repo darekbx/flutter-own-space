@@ -17,6 +17,7 @@ import 'package:ownspace/supplies/bloc/supply.dart' as supply;
 import 'package:ownspace/supplies/supplies_page.dart';
 import 'package:ownspace/tasks/tasks_page.dart';
 import 'package:ownspace/weight/weight_page.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 
 class ApplicationsPage extends StatefulWidget {
 
@@ -43,7 +44,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.white,
+        color: Colors.black,
         child: SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -127,7 +128,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   Widget _showStatus(String status) {
     return Center(
-      child: Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
+      child: Text(status, style: TextStyle(color: Colors.white60, fontSize: 14)),
     );
   }
 
@@ -159,32 +160,48 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           },
                           right: true, bottom: true),
                       menuItem("icons/ic_sugar.png", "Sugar",
-                          callback: () { redirect(SugarPage()); },
+                          callback: () {
+                            redirect(SugarPage());
+                          },
                           right: true, bottom: true),
                       suppliesItem(
-                          callback: () { redirect(SuppliesPage()); },
+                          callback: () {
+                            redirect(SuppliesPage());
+                          },
                           bottom: true),
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_books.png", "Books",
-                          callback: () { redirect(BooksPage()); },
+                          callback: () {
+                            redirect(BooksPage());
+                          },
                           right: true, bottom: true),
                       menuItem("icons/ic_weight.png", "Weight",
-                          callback: () { redirect(WeightPage()); },
+                          callback: () {
+                            redirect(WeightPage());
+                          },
                           right: true, bottom: true),
                       menuItem("icons/ic_fuel.png", "Fuel",
-                          callback: () { redirect(FuelPage()); },
+                          callback: () {
+                            redirect(FuelPage());
+                          },
                           bottom: true),
                     ]),
                     Row(children: <Widget>[
-                      menuItem("icons/ic_notepad.png" , "Notepad",
-                          callback: () { redirect(NotepadPage()); },
+                      menuItem("icons/ic_notepad.png", "Notepad",
+                          callback: () {
+                            redirect(NotepadPage());
+                          },
                           right: true, bottom: true),
                       menuItem("icons/ic_tasks.png", "Tasks",
-                          callback: () { redirect(TasksPage()); },
+                          callback: () {
+                            redirect(TasksPage());
+                          },
                           right: true, bottom: true),
                       menuItem("icons/ic_password_vault.png", "Password vault",
-                          callback: () { redirect(AuthorizePage()); },
+                          callback: () {
+                            redirect(AuthorizePage());
+                          },
                           bottom: true),
                     ]),
                     Row(children: <Widget>[
@@ -197,9 +214,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                             });
                           },
                           right: true),
-                      menuItem("icons/ic_time_capsule.png", "Time Capsule", right: true),
+                      menuItem("icons/ic_time_capsule.png", "Time Capsule",
+                          right: true, callback: () {
+                            openTimeMachine();
+                          }),
                       menuItem("icons/ic_backup.png", "Backup",
-                        callback: () { redirect(BackupPage()); },),
+                        callback: () {
+                          redirect(BackupPage());
+                        },),
                     ]),
                   ],),
               )
@@ -210,6 +232,13 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   void redirect(Widget page) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     _summaryBloc.add(LoadSummary());
+  }
+
+  void openTimeMachine() async {
+    await LaunchApp.openApp(
+        androidPackageName: 'com.darekbx.sambaclient',
+        openStore: false
+    );
   }
 
   Widget suppliesItem({Function callback, left: false, right: false, top: false, bottom: false, hidden: false}) {
