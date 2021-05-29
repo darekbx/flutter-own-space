@@ -40,6 +40,7 @@ class EntryBloc extends Bloc<EntryEvent, EntryState> {
       List<double> maxMin = await _entriesRepository.fetchMaxMinWeight();
       yield EntriesLoaded(entries, maxMin[0], maxMin[1]);
     } catch (e) {
+      print(e);
       yield Error(e.errMsg());
     }
   }

@@ -36,7 +36,20 @@ class EntriesRepository {
     final List<Map<String, dynamic>> cursor =
       await db.query(DatabaseProvider.ENTRIES_TABLE);
     db.close();
-    return cursor.map((row) => Entry.fromEntity(row)).toList();
+
+    return cursor.map((row) {
+      var rowCopy = Map<String, dynamic>.from(row);
+      var date = int.parse(rowCopy['date']);
+
+      // Some old dates are saved in second timestamp
+      // To fix that those dates are multiplied by 1000
+      if (date < 100000000000) {
+        date *= 1000;
+        rowCopy['date'] = "$date";
+      }
+
+      return Entry.fromEntity(rowCopy);
+    }).toList();
   }
 
   Future<List<double>> fetchMaxMinWeight() async {
