@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:ownspace/allegro_observer/filters_page.dart';
 import 'package:ownspace/applications/bloc/summary.dart';
 import 'package:ownspace/applications/time_keeper.dart';
@@ -14,7 +13,6 @@ import 'package:ownspace/notepad/notepad_page.dart';
 import 'package:ownspace/passwordvault/authorize/authorizepage.dart';
 import 'package:ownspace/sugar/sugar_page.dart';
 import 'package:ownspace/supplies/bloc/supply.dart' as supply;
-import 'package:ownspace/supplies/supplies_page.dart';
 import 'package:ownspace/tasks/tasks_page.dart';
 import 'package:ownspace/weight/weight_page.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
@@ -45,73 +43,38 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   Widget build(BuildContext context) {
     return Container(
         color: Colors.black,
-        child: SafeArea(
-            child: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                      width: double.infinity,
-                      height: 180.0,
-                      child: Padding(
-                          padding: EdgeInsets.all(16.0), child: statusCard())
-                      ),
                   Container(
                       width: double.infinity,
                       child: Padding(
                           padding: EdgeInsets.only(
                               left: 16.0, right: 16.0, bottom: 16.0
                           ),
-                          child: applicationsCard()
+                          child: mainCard()
                       )
                   ),
                 ],
-              ),
-            )
         ));
   }
 
-  Card statusCard() {
-    return Card(
-        elevation: 4.0,
-        color: Colors.green,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: BlocProvider(
-            create: (context) => _summaryBloc,
-            child: _createSummaryBody()
-          )
-        )
+  Widget mainCard() {
+    return BlocProvider(
+        create: (context) => _summaryBloc,
+        child: _createCard()
     );
   }
 
-  Widget _createSummaryBody() {
-    var datetime = DateTime.now();
-    var dateString = DateFormat("EEEE, dd MMMM yyyy").format(datetime);
-
+  Widget _createCard() {
     return BlocBuilder<SummaryBloc, SummaryState>(
       builder: (context, state) {
         if (state is SummaryLoaded) {
           _supplyBloc.add(supply.FetchLowSupplies());
           var summary = (state as SummaryLoaded).summary;
-          return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("$dateString", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500)),
-                Row(children: <Widget>[
-                  Text("Today's sugar: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.todaysSugar.toStringAsFixed(1)}g", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
-                ]),
-                Row(children: <Widget>[
-                  Text("Books: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.booksCount}", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
-                ]),
-                Row(children: <Widget>[
-                  Text("Last weights: ", style: TextStyle(color: Colors.white)),
-                  Text("${summary.lastWeights.map((e) => e.toStringAsFixed(1)).join("kg / ")}kg", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500))
-                ]),
-              ]
+          return applicationsCard(
+              summary.todaysSugar.toStringAsFixed(1),
+              "${summary.booksCount}"
           );
         } else if (state is Error) {
           return _showStatus("Error");
@@ -132,17 +95,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     );
   }
 
-  Card applicationsCard() {
+  Card applicationsCard(String todaysSugar, String booksCount) {
     return Card(
         elevation: 4.0,
+        color: Colors.black,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text('Applications')
-              ),
               Divider(color: Colors.black38, height: 1),
               Container(
                 child: Column(
@@ -159,19 +119,15 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                             });
                           },
                           right: true, bottom: true),
-                      menuItem("icons/ic_sugar.png", "Sugar",
+                      menuItem("icons/ic_sugar.png", "Sugar ($todaysSugar)",
                           callback: () {
                             redirect(SugarPage());
                           },
                           right: true, bottom: true),
-                      suppliesItem(
-                          callback: () {
-                            redirect(SuppliesPage());
-                          },
-                          bottom: true),
+                      menuItem("icons/ic_empty.png", "?", bottom: true),
                     ]),
                     Row(children: <Widget>[
-                      menuItem("icons/ic_books.png", "Books",
+                      menuItem("icons/ic_books.png", "Books ($booksCount)",
                           callback: () {
                             redirect(BooksPage());
                           },
@@ -231,7 +187,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   void redirect(Widget page) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-    _summaryBloc.add(LoadSummary());
+    //_summaryBloc.add(LoadSummary());
   }
 
   void openTimeMachine() async {
@@ -241,72 +197,12 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     );
   }
 
-  Widget suppliesItem({Function callback, left: false, right: false, top: false, bottom: false, hidden: false}) {
-    return BlocProvider(
-        create: (context) => _supplyBloc,
-        child: _createSuppliesBody(callback: callback)
-    );
-  }
-
-  Widget _createSuppliesBody({Function callback}) {
-    BorderSide defaultBorder = BorderSide(color: Colors.black38, width: 0.5);
-    return BlocBuilder<supply.SupplyBloc, supply.SupplyState>(
-      builder: (context, state) {
-        if (state is supply.SuppliesLoaded) {
-          var lowSupplies = (state as supply.SuppliesLoaded)
-              .entries
-              .map((supply) => "${supply.name} (${supply.amount})")
-              .join("\n");
-
-          var color = lowSupplies == "" ? Colors.black : Colors.red;
-          var text = lowSupplies == "" ? "Supplies are full" : lowSupplies;
-
-          return SizedBox(
-              height: 106,
-              width: 123.7,
-              child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                        right: false ? defaultBorder : BorderSide.none,
-                        bottom: true ? defaultBorder : BorderSide.none,
-                        top: false ? defaultBorder : BorderSide.none,
-                        left: false ? defaultBorder : BorderSide.none
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: InkWell(
-                      child: Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Container(child:
-                        Text(text, style: TextStyle(
-                            color: color, fontSize: 10, fontWeight: FontWeight.w500))
-                        ),
-                      ),
-                      onTap: () {
-                        callback();
-                      }
-                  )
-              )
-          );
-        } else if (state is supply.Error) {
-          return _showStatus("Error");
-        } else if (state is supply.Loading) {
-          return _showStatus("Loading");
-        } else if (state is supply.InitialSupplyState) {
-          //_supplyBloc.add(supply.FetchLowSupplies());
-          return _showStatus("Loading");
-        }
-        return _showStatus("unknown $state");
-      },
-    );
-  }
-
   Widget menuItem(String assetName, String text,
       {Function callback, left: false, right: false, top: false, bottom: false, hidden: false}) {
     if (hidden) {
       return Spacer();
     }
-    BorderSide defaultBorder = BorderSide(color: Colors.black38, width: 0.5);
+    BorderSide defaultBorder = BorderSide(color: Colors.white30, width: 0.5);
     return Expanded(
         child: Container(
             decoration: BoxDecoration(
@@ -328,7 +224,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           padding: EdgeInsets.all(8),
                           child: Image.asset(assetName, width: 40, height: 40)
                       ),
-                      Text(text, style: TextStyle(fontSize: 11))
+                      Text(text, style: TextStyle(fontSize: 11, color: Colors.white70))
                     ],
                   )),
               onTap: () { callback(); },
