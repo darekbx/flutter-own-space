@@ -11,6 +11,7 @@ import 'package:ownspace/fuel/fuel_page.dart';
 import 'package:ownspace/news/readerpage.dart';
 import 'package:ownspace/notepad/notepad_page.dart';
 import 'package:ownspace/passwordvault/authorize/authorizepage.dart';
+import 'package:ownspace/reader/news_reader_page.dart';
 import 'package:ownspace/sugar/sugar_page.dart';
 import 'package:ownspace/supplies/bloc/supply.dart' as supply;
 import 'package:ownspace/tasks/tasks_page.dart';
@@ -124,7 +125,11 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                             redirect(SugarPage());
                           },
                           right: true, bottom: true),
-                      menuItem("icons/ic_empty.png", "?", bottom: true),
+                      menuItem("icons/ic_rss.png", "Reader",
+                          callback: () {
+                            redirect(NewsReaderPage());
+                          },
+                          bottom: true),
                     ]),
                     Row(children: <Widget>[
                       menuItem("icons/ic_books.png", "Books ($booksCount)",
