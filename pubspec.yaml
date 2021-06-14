@@ -24,6 +24,7 @@ dependencies:
   path_provider: ^2.0.2
   intl: ^0.17.0
   webfeed: ^0.7.0
+  enough_convert: ^1.3.0
 
   bloc: ^4.0.0
   flutter_bloc: ^4.0.0
@@ -48,10 +49,10 @@ flutter:
         - asset: fonts/baloo2_regular.ttf
 
   assets:
-      - assets/decryption_sample.base64
+      - assets/
       - icons/
 #      - raw/fuel.bpk
 #      - raw/tasks.bpk
 #      - raw/mniammniam.json
 #      - raw/book_manager.sqlite
-#      - raw/README.md
+      - raw/README.md

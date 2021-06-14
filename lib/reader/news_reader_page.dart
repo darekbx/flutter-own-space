@@ -16,17 +16,16 @@
  *
  * List is containing news from all sources, with scroll to next page
  */
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/reader/bloc/reader.dart';
-import 'package:ownspace/reader/bloc/source.dart';
 import 'package:ownspace/reader/model/newsitem.dart';
+import 'package:ownspace/sugar/own_space_date_utils.dart';
 
 class NewsReaderPage extends StatefulWidget {
-
   NewsReaderPage({Key key}) : super(key: key);
 
   @override
@@ -34,7 +33,6 @@ class NewsReaderPage extends StatefulWidget {
 }
 
 class _NewsReaderPageState extends State<NewsReaderPage> {
-
   ReaderBloc _readerBloc;
 
   @override
@@ -54,22 +52,26 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
               if (state is Loading) {
                 return _showStatus("Loading...");
               } else if (state is InitialState) {
-                _readerBloc.add(ListFeed(Source.HACKADAY));
+                _readerBloc.add(ListFeed());
                 return _showStatus("Loading...");
+              } else if (state is LoadingStep) {
+                return _showStatus("Loading ${state.step}...");
               } else if (state is Error) {
-                return _showStatus("Error, while loading supply: ${state.message}");
+                return _showStatus("Error, while loading: ${state.message}");
               } else if (state is Loaded) {
                 return _showList(state.items);
+              } else {
+                return _showStatus("Unknown error, while loading");
               }
             },
           ),
-        )
-    );
+        ));
   }
 
   Widget _showStatus(String status) {
     return Center(
-      child: Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
+      child:
+          Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
     );
   }
 
@@ -78,20 +80,41 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
         itemCount: items.length,
         itemBuilder: (context, index) {
           NewsItem item = items[index];
-          return
-            InkWell(
-                child: ListTile(
-                  //leading: TODO: source icon
+          return InkWell(
+              child: ListTile(
+                  title: Stack(children: [
+                    if (item.imageUrl != null) Image.network(item.imageUrl),
+                    Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Image.asset(item.sourceIconAsset,
+                            width: 30, height: 30))
+                  ]),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.title,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold)),
+                      Text(OwnSpaceDateUtils.formatDateTime(item.date),
+                          style:
+                          TextStyle(color: Colors.black45, fontSize: 12)),
+                      Text(item.shortText,
+                          style: TextStyle(color: Colors.black87, fontSize: 14))
+                    ],
+                  )),
+              onTap: () {
+                launchURL(item.url);
+              });
+        });
+  }
 
-                  title: Text(item.title),
-                  subtitle: Text(item.shortText),
-                  trailing: Text(item.date),
-                ),
-                onTap: () {
-
-                }
-            );
-        }
-    );
+  launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

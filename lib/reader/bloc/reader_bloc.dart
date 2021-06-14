@@ -16,10 +16,11 @@ class ReaderBloc extends Bloc<ReaderEvent, ReaderState> {
     try {
       if (event is ListFeed) {
         yield Loading();
-        List<NewsItem> items = await _newsProvider.load(event.source);
+        List<NewsItem> items = await _newsProvider.load();
         yield Loaded(items);
       }
     } on Exception catch (e) {
+      print(e);
       yield Error(e.toString());
     }
   }

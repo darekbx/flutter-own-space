@@ -15,6 +15,11 @@ class InitialState extends ReaderState { }
 
 class Loading extends ReaderState { }
 
+class LoadingStep extends ReaderState {
+  final String step;
+  LoadingStep(this.step) : super([step]);
+}
+
 class Loaded extends ReaderState {
   final List<NewsItem> items;
   Loaded(this.items) : super([items]);

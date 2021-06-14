@@ -1,36 +1,61 @@
-
-import 'package:ownspace/reader/bloc/source.dart';
 import 'package:webfeed/webfeed.dart';
 
 class NewsItem {
-
-  final Source source;
+  final String sourceIconAsset;
   final String itemExternalId;
   final String title;
   final String url;
   final String imageUrl;
   final String shortText;
-  final String date;
+  final DateTime date;
 
-  NewsItem(
-      this.source,
-      this.itemExternalId,
-      this.title,
-      this.url,
-      this.imageUrl,
-      this.shortText,
-      this.date
-      );
+  NewsItem(this.sourceIconAsset, this.itemExternalId, this.title, this.url,
+      this.imageUrl, this.shortText, this.date);
 
-  static NewsItem fromRssItem(Source source, RssItem rssItem) {
+  static NewsItem fromRssItem(String sourceIconAsset, RssItem rssItem) {
     return NewsItem(
-        source,
+        sourceIconAsset,
         rssItem.guid,
         rssItem.title,
         rssItem.link,
-        "",//rssItem.media.embed.url,
-        rssItem.description,
-        rssItem.pubDate.toIso8601String()
+        getImage(rssItem),
+        cleanUp(rssItem.description),
+        rssItem.pubDate
     );
+  }
+
+  static String getImage(RssItem rssItem) {
+    if (rssItem.description.indexOf("<img src='") == 0) {
+      // For TuStolica
+      var start = rssItem.description.indexOf("src='") + 5;
+      var end = rssItem.description.indexOf("'", start + 1);
+      return rssItem.description.substring(start, end);
+    }
+
+    if (rssItem.media.thumbnails.isEmpty) {
+      return null;
+    }
+    return rssItem.media.thumbnails[0].url;
+  }
+
+  static String cleanUp(String htmlText) {
+    var noHtml = removeHtmlTags(htmlText);
+    noHtml = noHtml
+        .replaceAll("&#8220;", "\"")
+        .replaceAll("&#8221;", "\"");
+    if (noHtml.contains("&#8230;")) {
+      // For HackaDay
+      return noHtml.substring(0, noHtml.lastIndexOf("&#8230;"));
+    } else if (noHtml == "Comments") {
+      // For Y news
+      return "No description";
+    } else {
+      return noHtml;
+    }
+  }
+
+  static String removeHtmlTags(String text) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+    return text.replaceAll(exp, '');
   }
 }

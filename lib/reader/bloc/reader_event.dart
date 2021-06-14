@@ -12,6 +12,5 @@ abstract class ReaderEvent extends Equatable {
 }
 
 class ListFeed extends ReaderEvent {
-  final Source source;
-  ListFeed(this.source) : super([source]);
+  ListFeed() : super([]);
 }
