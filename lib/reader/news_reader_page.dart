@@ -55,10 +55,12 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
                 _readerBloc.add(ListFeed());
                 return _showStatus("Loading...");
               } else if (state is LoadingStep) {
-                return _showStatus("Loading ${state.step}...");
+                var progress = state.progress;
+                return _showLoadingStatus("Loading ${state.step}...", progress);
               } else if (state is Error) {
                 return _showStatus("Error, while loading: ${state.message}");
               } else if (state is Loaded) {
+                print("in, all count: ${state.items.length}");
                 return _showList(state.items);
               } else {
                 return _showStatus("Unknown error, while loading");
@@ -72,6 +74,24 @@ class _NewsReaderPageState extends State<NewsReaderPage> {
     return Center(
       child:
           Text(status, style: TextStyle(color: Colors.black87, fontSize: 14)),
+    );
+  }
+
+  Widget _showLoadingStatus(String status, double progress) {
+    return Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(status,
+                  style: TextStyle(color: Colors.black87, fontSize: 14)),
+              Padding(
+                  padding: EdgeInsets.only(top: 4),
+                  child:
+                  SizedBox(
+                      width: 200,
+                      child: LinearProgressIndicator(value: progress))
+              )
+            ])
     );
   }
 

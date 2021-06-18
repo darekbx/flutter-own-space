@@ -1,21 +1,22 @@
 import 'dart:async';
-import 'dart:convert' as cnvrt;
 import 'dart:io';
 import 'package:enough_convert/enough_convert.dart';
 import 'package:http/http.dart';
-import 'package:ownspace/reader/bloc/reader_state.dart';
 import 'package:ownspace/reader/bloc/source.dart';
 import 'package:ownspace/reader/model/newsitem.dart';
 import 'package:webfeed/webfeed.dart';
 
 class NewsProvider {
 
+  Future<List<NewsItem>> loadSingle(Source source) async {
+    return await _loadNewsItems(source);
+  }
+
   Future<List<NewsItem>> load() async {
     List<NewsItem> items = [];
 
-    for (var sourceType in SourceType.values) {
-      var source = Sources[sourceType];
-      var loadedItems = await _loadNewsItems(source.url, source, sourceType);
+    for (var source in Sources) {
+      var loadedItems = await _loadNewsItems(source);
       items.addAll(loadedItems);
     }
 
@@ -23,22 +24,17 @@ class NewsProvider {
     return items;
   }
 
-  Future<List<NewsItem>> _loadNewsItems(
-      String url, Source source, SourceType sourceType) async {
-    var response = await get(Uri.parse(url));
+  Future<List<NewsItem>> _loadNewsItems(Source source) async {
+    var response = await get(Uri.parse(source.url));
     if (response.statusCode == HttpStatus.ok) {
       String body;
 
-      if (sourceType == SourceType.TUSTOLICA_PLUS
-          || sourceType == SourceType.TUSTOLICA_MOKOTOW
-          || sourceType == SourceType.TUSTOLICA_WOLA
-          || sourceType == SourceType.TUSTOLICA_BEMOWO) {
+      if (source.type.toString().contains("TUSTOLICA")) {
         body = Latin2Codec(allowInvalid: false).decode(response.bodyBytes);
       } else {
         body = response.body;
       }
 
-      print(url);
       var list = RssFeed.parse(body);
 
       return list.items

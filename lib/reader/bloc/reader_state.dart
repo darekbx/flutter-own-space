@@ -17,7 +17,8 @@ class Loading extends ReaderState { }
 
 class LoadingStep extends ReaderState {
   final String step;
-  LoadingStep(this.step) : super([step]);
+  final double progress;
+  LoadingStep(this.step, this.progress) : super([step, progress]);
 }
 
 class Loaded extends ReaderState {
