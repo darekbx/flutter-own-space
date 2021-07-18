@@ -5,6 +5,8 @@ class YearSummary {
   final int count;
   int englishCount;
 
+  int polishCount() => count - englishCount;
+
   YearSummary(this.year, this.count, this.englishCount);
 
   static YearSummary fromEntity(Map<String, dynamic> entity) {

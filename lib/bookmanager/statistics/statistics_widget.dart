@@ -68,11 +68,11 @@ class StatisticsWidgetState extends State<StatisticsWidget> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text("${books[index].year}"),
+                            Text("${books[index].year} (${books[index].count})"),
 
                             Row(
                               children: <Widget>[
-                                Text("${books[index].count}"),
+                                Text("${books[index].polishCount()}", style: TextStyle(color: Colors.red)),
                                 Text(" / "),
                                 Text(" ${books[index].englishCount}", style: TextStyle(color: Colors.blue))
                               ],
