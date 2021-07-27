@@ -69,9 +69,9 @@ class _TagState extends State<Tag> {
           style = TextStyle(fontWeight: FontWeight.bold);
         }
         return InkWell(
-            child: Padding(
+            child: Container(width: double.infinity, child: Padding(
                 padding: EdgeInsets.all(16),
-                child: Text("#${widget.tagName} ($toDisplay)", style: style)),
+                child: Text("#${widget.tagName} ($toDisplay)", style: style))),
             onTap: () {
               NewsDatabaseProvider.instance.setTagCount(widget.tagName, total);
               Navigator.push(

@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TimeKeeper {
+  final ENABLED = true;
   final OFFSET = 2 * 60 * 60 * 1000; // 2 hours
   final MIN_HOUR = 8;
   final MAX_HOUR = 17;
@@ -22,6 +23,8 @@ class TimeKeeper {
   }
 
   Future<bool> _canOpen(String key) async {
+    if (!ENABLED) return true;
+
     var lastOpenTime = (await SharedPreferences.getInstance()).getInt(key);
 
     if (lastOpenTime == null) {
