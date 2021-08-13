@@ -25,6 +25,8 @@ dependencies:
   intl: ^0.17.0
   webfeed: ^0.7.0
   enough_convert: ^1.3.0
+  get_it: ^7.2.0
+  flutter_dotenv: ^5.0.2
 
   bloc: ^4.0.0
   flutter_bloc: ^4.0.0
@@ -49,10 +51,11 @@ flutter:
         - asset: fonts/baloo2_regular.ttf
 
   assets:
-      - assets/
-      - icons/
-#      - raw/fuel.bpk
-#      - raw/tasks.bpk
-#      - raw/mniammniam.json
-#      - raw/book_manager.sqlite
-      - raw/README.md
+    - .env
+    - assets/
+    - icons/
+    #      - raw/fuel.bpk
+    #      - raw/tasks.bpk
+    #      - raw/mniammniam.json
+    #      - raw/book_manager.sqlite
+    - raw/README.md

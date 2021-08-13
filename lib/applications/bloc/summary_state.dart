@@ -16,7 +16,7 @@ class InitialSummaryState extends SummaryState { }
 class Loading extends SummaryState { }
 
 class SummaryLoaded extends SummaryState {
-  final Summary summary;
+  final ApplicationsSummary summary;
   SummaryLoaded(this.summary) : super([summary]);
 }
 
