@@ -47,14 +47,17 @@ class CurrenciesRepositoryImpl implements CurrenciesRepository {
       var toName = _getEnumValue(to.toString());
       var conversion = "${fromName}_$toName";
 
-      var cachedItem = _cacheItems
-          .firstWhere((item) => item.conversion == conversion, orElse: null);
-      if (cachedItem != null) {
-        var hasExpired = _currentTimeMs() - cachedItem.timestamp > _cacheTimeout;
-        if (hasExpired) {
-          _cacheItems.removeWhere((item) => item.conversion == conversion);
-        } else {
-          return cachedItem.value;
+      if (_cacheItems.any((item) => item.conversion == conversion)) {
+        var cachedItem = _cacheItems
+            .firstWhere((item) => item.conversion == conversion, orElse: null);
+        if (cachedItem != null) {
+          var hasExpired = _currentTimeMs() - cachedItem.timestamp >
+              _cacheTimeout;
+          if (hasExpired) {
+            _cacheItems.removeWhere((item) => item.conversion == conversion);
+          } else {
+            return cachedItem.value;
+          }
         }
       }
 

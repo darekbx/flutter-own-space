@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ownspace/allegro_observer/filters_page.dart';
 import 'package:ownspace/applications/bloc/summary.dart';
+import 'package:ownspace/applications/currencies/currency_widget.dart';
+import 'package:ownspace/applications/currencies/domain/currencies.dart';
 import 'package:ownspace/applications/model/summary.dart';
 import 'package:ownspace/applications/time_keeper.dart';
 import 'package:ownspace/backup/backup_page.dart';
@@ -33,6 +35,9 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   SummaryBloc _summaryBloc;
   supply.SupplyBloc _supplyBloc;
+
+  double _valueUsd = 0;
+  double _valueEur = 0;
 
   @override
   void initState() {
@@ -184,18 +189,35 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     ]),
                     Row(children: <Widget>[
                       menuItem(
-                          "", "USD ${summary.usdToPln.toStringAsFixed(2)}zł",
-                          right: true,
-                          icon: _currencyIcon("\$", Colors.lightBlue)
+                        "", "USD ${_valueUsd.toStringAsFixed(2)}zł",
+                        right: true,
+                        icon: CurrencyWidget(from: Currency.USD,
+                            to: Currency.PLN,
+                            sign: "\$",
+                            color: Colors.lightBlue,
+                            callback: (value) {
+                              setState(() {
+                                _valueUsd = value;
+                              });
+                            }),
                       ),
                       menuItem(
-                          "", "EUR ${summary.eurToPln.toStringAsFixed(2)}zł",
+                          "", "EUR ${_valueEur.toStringAsFixed(2)}zł",
                           right: true,
-                          icon: _currencyIcon("€", Colors.lightGreen)
+                          icon: CurrencyWidget(from: Currency.EUR,
+                              to: Currency.PLN,
+                              sign: "€",
+                              color: Colors.lightGreen,
+                              callback: (value) {
+                                setState(() {
+                                  _valueEur = value;
+                                });
+                              })
                       ),
                       menuItem(
                           "", "Gold",
-                          icon: _currencyIcon("Au", Color.fromARGB(255, 255, 215, 0))
+                          icon: _currencyIcon(
+                              "Au", Color.fromARGB(255, 255, 215, 0))
                       ),
                     ]),
                   ],),
