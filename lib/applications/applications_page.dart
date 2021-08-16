@@ -6,6 +6,7 @@ import 'package:ownspace/allegro_observer/filters_page.dart';
 import 'package:ownspace/applications/bloc/summary.dart';
 import 'package:ownspace/applications/currencies/currency_widget.dart';
 import 'package:ownspace/applications/currencies/domain/currencies.dart';
+import 'package:ownspace/applications/currencies/gold_widget.dart';
 import 'package:ownspace/applications/model/summary.dart';
 import 'package:ownspace/applications/time_keeper.dart';
 import 'package:ownspace/backup/backup_page.dart';
@@ -38,6 +39,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
 
   double _valueUsd = 0;
   double _valueEur = 0;
+  double _valueGold = 0;
 
   @override
   void initState() {
@@ -215,9 +217,15 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                               })
                       ),
                       menuItem(
-                          "", "Gold",
-                          icon: _currencyIcon(
-                              "Au", Color.fromARGB(255, 255, 215, 0))
+                          "", "Gold ${_valueGold.toStringAsFixed(2)}zł",
+                          icon: GoldWidget(
+                              sign: "Au",
+                              color: Color.fromARGB(255, 255, 215, 0),
+                              callback: (value) {
+                                setState(() {
+                                  _valueGold = value;
+                                });
+                              })
                       ),
                     ]),
                   ],),
