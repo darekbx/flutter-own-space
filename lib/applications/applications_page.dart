@@ -116,13 +116,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     Row(children: <Widget>[
                       menuItem("icons/ic_news.png", "News reader",
                           callback: () {
-                            TimeKeeper().canOpenNews().then((canOpen) {
+                            TimeKeeper().canOpenNews().then((canOpen) async {
                               if (canOpen) {
-                                redirect(ReaderPage());
+                                await redirect(ReaderPage());
+                                _summaryBloc.add(LoadSummary());
                               }
                             });
                           },
-                          right: true, bottom: true),
+                          right: true, bottom: true, canOpen: summary.canOpenNews ? 1 : 0),
                       menuItem("icons/ic_sugar.png",
                           "Sugar (${summary.todaysSugar.toStringAsFixed(1)})",
                           callback: () {
@@ -173,13 +174,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                     Row(children: <Widget>[
                       menuItem("icons/ic_allegro.png", "Allegro Observer",
                           callback: () {
-                            TimeKeeper().canOpenAllegro().then((canOpen) {
+                            TimeKeeper().canOpenAllegro().then((canOpen) async {
                               if (canOpen) {
-                                redirect(FiltersPage());
+                                await redirect(FiltersPage());
+                                _summaryBloc.add(LoadSummary());
                               }
                             });
                           },
-                          right: true, bottom: true),
+                          right: true, bottom: true, canOpen: summary.canOpenAllegro ? 1 : 0),
                       menuItem("icons/ic_time_capsule.png", "Time Capsule",
                           right: true, bottom: true, callback: () {
                             openTimeMachine();
@@ -250,7 +252,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
     );
   }
 
-  void redirect(Widget page) async {
+  Future redirect(Widget page) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) => page));
     //_summaryBloc.add(LoadSummary());
   }
@@ -263,7 +265,7 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   }
 
   Widget menuItem(String assetName, String text,
-      {Function callback, left: false, right: false, top: false, bottom: false, hidden: false, Widget icon}) {
+      {Function callback, left: false, right: false, top: false, bottom: false, hidden: false, int canOpen = -1, Widget icon}) {
     if (hidden) {
       return Spacer();
     }
@@ -282,19 +284,52 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
             alignment: Alignment.center,
             child: InkWell(
               child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.all(8),
-                          child: icon ?? Image.asset(assetName, width: 40, height: 40)
-                      ),
-                      Text(text, style: TextStyle(fontSize: 11, color: Colors.white70))
-                    ],
-                  )),
-              onTap: callback != null ? () { callback(); } : null,
+                padding: EdgeInsets.all(16),
+                child: Stack(children: <Widget>[
+                  _displayCanOpenState(canOpen),
+                  Column(
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.all(8),
+                            child: icon ??
+                                Image.asset(assetName, width: 40, height: 40)
+                        ),
+                        Text(text, style: TextStyle(
+                            fontSize: 11, color: Colors.white70))
+                      ])
+                ]),
+              ),
+              onTap: callback != null ? () {
+                callback();
+              } : null,
             )
         )
     );
+  }
+
+  Widget _displayCanOpenState(int canOpen) {
+    if (canOpen == -1) return Container();
+    var dotSize = 12.0;
+    if (canOpen == 1) {
+      return Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.white),
+            shape: BoxShape.circle,
+            color: Colors.green
+          ),
+          width: dotSize,
+          height: dotSize,
+      );
+    } else {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white),
+          shape: BoxShape.circle,
+          color: Colors.red,
+        ),
+        width: dotSize,
+        height: dotSize,
+      );
+    }
   }
 }
