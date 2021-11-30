@@ -36,11 +36,13 @@ class SummaryBloc extends Bloc<SummaryEvent, SummaryState> {
 
     bool canOpenAllegro = await _timeKeeper.canOpenAllegro(dontUpdate: true);
     bool canOpenNews = await _timeKeeper.canOpenNews(dontUpdate: true);
+    bool canOpenRss = await _timeKeeper.canOpenRss(dontUpdate: true);
     return ApplicationsSummary(
         booksCount,
         todaysSugar,
         lastWeights,
         canOpenAllegro,
-        canOpenNews);
+        canOpenNews,
+        canOpenRss);
   }
 }

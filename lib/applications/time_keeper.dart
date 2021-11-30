@@ -10,11 +10,13 @@ class TimeKeeper {
 
   final String _newsKey = "newsKey";
   final String _allegroKey = "allegroKey";
+  final String _rssKey = "rssKey";
 
   void reset() async {
     var preferences = await SharedPreferences.getInstance();
     await preferences.setInt(_newsKey, 0);
     await preferences.setInt(_allegroKey, 0);
+    await preferences.setInt(_rssKey, 0);
   }
 
   Future<bool> canOpenNews({bool dontUpdate = false}) async {
@@ -23,6 +25,10 @@ class TimeKeeper {
 
   Future<bool> canOpenAllegro({bool dontUpdate = false}) async {
     return await _canOpen(_allegroKey, dontUpdate: dontUpdate);
+  }
+
+  Future<bool> canOpenRss({bool dontUpdate = false}) async {
+    return await _canOpen(_rssKey, dontUpdate: dontUpdate);
   }
 
   void _setTime(String key) async {

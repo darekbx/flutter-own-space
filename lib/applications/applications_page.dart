@@ -132,9 +132,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
                           right: true, bottom: true),
                       menuItem("icons/ic_rss.png", "Reader",
                           callback: () {
-                            redirect(NewsReaderPage());
+                            TimeKeeper().canOpenRss().then((canOpen) async {
+                              if (canOpen) {
+                                await redirect(NewsReaderPage());
+                                _summaryBloc.add(LoadSummary());
+                              }
+                            });
                           },
-                          bottom: true),
+                          bottom: true, canOpen: summary.canOpenRss ? 1 : 0),
                     ]),
                     Row(children: <Widget>[
                       menuItem(
@@ -308,8 +313,14 @@ class _ApplicationsPageState extends State<ApplicationsPage> {
   }
 
   Widget _displayCanOpenState(int canOpen) {
-    if (canOpen == -1) return Container();
-    var dotSize = 12.0;
+    var dotSize = 8.0;
+
+    if (canOpen == -1) {
+      return Container(
+        width: dotSize,
+        height: dotSize);
+    }
+
     if (canOpen == 1) {
       return Container(
           decoration: BoxDecoration(
