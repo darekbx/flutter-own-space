@@ -88,7 +88,17 @@ class _TagState extends State<Tag> {
               });
             });
       } else {
-        return _errorView(json["error"]["message_en"]);
+        return InkWell(
+            child: _errorView(json["error"]["message_en"]),
+            onLongPress: () {
+              setState(() {
+                NewsDatabaseProvider.instance.deleteTag(widget.tagName);
+                setState(() {
+                  _isDeleted = true;
+                });
+              });
+            }
+        );
       }
     } else {
       return Text("Check api key");
