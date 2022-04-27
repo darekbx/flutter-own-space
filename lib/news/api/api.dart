@@ -9,6 +9,8 @@ class Api {
 
   final String apiKey;
   final String _endpoint = "http://a2.wykop.pl";
+  final String _popularTagsUrl = "https://www.wykop.pl/tagi/";
+
   static String tagUrl(String tag) => "https://www.wykop.pl/tag/$tag";
   static String itemUrl(int id) => "https://www.wykop.pl/wpis/$id";
 
@@ -40,6 +42,27 @@ class Api {
     var content = _fetchCachedString(tag, url, forceRefresh: forceRefresh);
     return Future.wait([tagCount, content])
         .then((response) => MapEntry<int, String>(response[0], response[1]));
+  }
+
+  Future<List<dynamic>> loadPopularTags() async {
+    var response = await get(Uri.parse(_popularTagsUrl));
+    var tags = [];
+
+    if (response.statusCode == HttpStatus.ok) {
+      var regexp = RegExp(r'<a class="tag create" href="(.*)">', multiLine: true);
+      var html = response.body;
+      var matches = regexp.allMatches(html);
+
+      for (var match in matches) {
+        var item = match.group(1);
+        var trimmed = item.substring(0, item.length - 1);
+        var start = trimmed.lastIndexOf("/");
+        tags.add(trimmed.substring(start + 1));
+      }
+
+      return tags;
+    }
+    return null;
   }
 
   Future<String> _fetchCachedString(String key, String url,
