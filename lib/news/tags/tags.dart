@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ownspace/news/api/api.dart';
 import 'package:ownspace/news/commonwidgets.dart';
+import 'package:ownspace/news/repository/localstorage.dart';
 import 'package:ownspace/news/repository/news_database_provider.dart';
 import 'tag.dart';
 
@@ -13,7 +15,23 @@ class Tags extends StatefulWidget {
 }
 
 class _TagsState extends State<Tags> {
+
+  var _localStorage = LocalStorage();
+  var _apiKey;
   var _tagFieldController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadApiKey();
+  }
+
+  void _loadApiKey() async {
+    var apiKey = await _localStorage.getApiKey();
+    setState(() {
+      _apiKey = apiKey;
+    });
+  }
 
   void _addTagDialog(BuildContext context) {
     showDialog(
@@ -21,9 +39,42 @@ class _TagsState extends State<Tags> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text("Add new tag"),
-            content: TextField(
-              controller: _tagFieldController,
-              decoration: InputDecoration(hintText: "Tag name without #"),
+            content:
+            FutureBuilder(
+              future: Api(_apiKey).loadPopularTags(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                return CommonWidgets.handleFuture(snapshot, (json) {
+                  return Autocomplete<String>(
+                      optionsBuilder: (TextEditingValue textEditingValue) {
+                        if (textEditingValue.text == '') {
+                          return const Iterable<String>.empty();
+                        }
+                        return snapshot.data.map((item) => "$item").where((String option) {
+                          return option.contains(textEditingValue.text.toLowerCase());
+                        });
+                      },
+                      fieldViewBuilder: (BuildContext context,
+                          TextEditingController textEditingController,
+                          FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                        return TextFormField(
+                          controller: textEditingController,
+                          decoration: InputDecoration(hintText: "Tag name without #"),
+                          focusNode: focusNode,
+                          onFieldSubmitted: (String value) {
+                            onFieldSubmitted();
+                            //_tagFieldController.text = value; TODO remove or uncomment?
+                          },
+                        );
+                      },
+                      onSelected: (String selection) {
+                        _tagFieldController.text = selection;
+                      }
+                    //controller: _tagFieldController,
+                    //decoration: InputDecoration(hintText: "Tag name without #"),
+                  );
+                });
+              },
             ),
             actions: <Widget>[
               FlatButton(

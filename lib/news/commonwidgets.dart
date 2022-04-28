@@ -32,12 +32,12 @@ class CommonWidgets {
 
   static loadingView() => Padding(
       padding: EdgeInsets.all(16.0),
-      child: Column(
+      child: SizedBox(height: 20, child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(child: CircularProgressIndicator(), width: 16, height: 16)
-          ]));
+          ])));
 
   static error(String errorMessage) => Center(
           child: Padding(

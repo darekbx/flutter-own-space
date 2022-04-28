@@ -47,22 +47,26 @@ class Api {
   Future<List<dynamic>> loadPopularTags() async {
     var response = await get(Uri.parse(_popularTagsUrl));
     var tags = [];
+    try {
+      if (response.statusCode == HttpStatus.ok) {
+        var regexp = RegExp(
+            r'<a class="tag create" href="(.*)">', multiLine: true);
+        var html = response.body;
+        var matches = regexp.allMatches(html);
 
-    if (response.statusCode == HttpStatus.ok) {
-      var regexp = RegExp(r'<a class="tag create" href="(.*)">', multiLine: true);
-      var html = response.body;
-      var matches = regexp.allMatches(html);
+        for (var match in matches) {
+          var item = match.group(1);
+          var trimmed = item.substring(0, item.length - 1);
+          var start = trimmed.lastIndexOf("/");
+          tags.add(trimmed.substring(start + 1));
+        }
 
-      for (var match in matches) {
-        var item = match.group(1);
-        var trimmed = item.substring(0, item.length - 1);
-        var start = trimmed.lastIndexOf("/");
-        tags.add(trimmed.substring(start + 1));
+        return tags;
       }
-
-      return tags;
+    } catch (e) {
+      print(e);
     }
-    return null;
+    return tags;
   }
 
   Future<String> _fetchCachedString(String key, String url,
