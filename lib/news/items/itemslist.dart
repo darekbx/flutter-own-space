@@ -22,6 +22,7 @@ class _ItemsListState extends State<ItemsList> {
   ScrollController _scrollController;
   var _localStorage = LocalStorage();
   var _apiKey;
+  var _apiSecret;
   var _nextPageData;
   List<dynamic> _itemsList;
 
@@ -36,8 +37,10 @@ class _ItemsListState extends State<ItemsList> {
 
   void _loadApiKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiKey = apiKey;
+      _apiSecret = apiSecret;
     });
   }
 
@@ -53,7 +56,7 @@ class _ItemsListState extends State<ItemsList> {
     var data = getData();
     var pagination = data["pagination"];
     if (pagination != null && pagination["next"] != null) {
-      var nextPageData = await Api(_apiKey).loadUrl(pagination["next"]);
+      var nextPageData = await Api(_apiKey, _apiSecret).loadUrl(pagination["next"]);
       setState(() {
         _nextPageData = JsonDecoder().convert(nextPageData);
         _itemsList.addAll(_nextPageData["data"] as List<dynamic>);

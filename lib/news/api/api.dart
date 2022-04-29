@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:ownspace/news/repository/news_database_provider.dart';
 import 'apicache.dart';
+import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
+import 'dart:convert';
 
 class Api {
-  Api(this.apiKey);
+  Api(this.apiKey, this.apiSecret);
 
   final String apiKey;
-  final String _endpoint = "http://a2.wykop.pl";
+  final String apiSecret;
+  final String _endpoint = "https://a2.wykop.pl";
   final String _popularTagsUrl = "https://www.wykop.pl/tagi/";
 
   static String tagUrl(String tag) => "https://www.wykop.pl/tag/$tag";
@@ -80,7 +84,8 @@ class Api {
       return cachedContents;
     }
 
-    var response = await get(Uri.parse(url));
+    var signedUrl = generateMd5(apiSecret + url);
+    var response = await get(Uri.parse(url), headers: {"apisign": signedUrl});
     if (response.statusCode == HttpStatus.ok) {
       var contents = response.body;
       ApiCache.add(key, contents);
@@ -88,5 +93,9 @@ class Api {
     } else {
       return null;
     }
+  }
+
+  String generateMd5(String input) {
+    return md5.convert(utf8.encode(input)).toString();
   }
 }

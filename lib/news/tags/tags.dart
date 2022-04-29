@@ -18,6 +18,7 @@ class _TagsState extends State<Tags> {
 
   var _localStorage = LocalStorage();
   var _apiKey;
+  var _apiSecret;
   var _tagFieldController = TextEditingController();
 
   @override
@@ -28,8 +29,10 @@ class _TagsState extends State<Tags> {
 
   void _loadApiKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiKey = apiKey;
+      _apiSecret = apiSecret;
     });
   }
 
@@ -41,7 +44,7 @@ class _TagsState extends State<Tags> {
             title: Text("Add new tag"),
             content:
             FutureBuilder(
-              future: Api(_apiKey).loadPopularTags(),
+              future: Api(_apiKey, _apiSecret).loadPopularTags(),
               builder:
                   (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
                 return CommonWidgets.handleFuture(snapshot, (json) {

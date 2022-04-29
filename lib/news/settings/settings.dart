@@ -10,6 +10,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   var _apiInputController = TextEditingController();
+  var _apiSecretInputController = TextEditingController();
   var _localStorage = LocalStorage();
 
   @override
@@ -17,20 +18,32 @@ class _SettingsState extends State<Settings> {
     super.initState();
     _loadKey();
     _apiInputController.addListener(() {
-      _localStorage.setApiKey(_apiInputController.text);
+      _localStorage.setApiKeyAndSecret(
+          _apiInputController.text,
+          _apiSecretInputController.text
+      );
+    });
+    _apiSecretInputController.addListener(() {
+      _localStorage.setApiKeyAndSecret(
+          _apiInputController.text,
+          _apiSecretInputController.text
+      );
     });
   }
 
   @override
   void dispose() {
     _apiInputController.dispose();
+    _apiSecretInputController.dispose();
     super.dispose();
   }
 
   void _loadKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiInputController.text = apiKey;
+      _apiSecretInputController.text = apiSecret;
     });
   }
 
@@ -48,6 +61,12 @@ class _SettingsState extends State<Settings> {
                   controller: _apiInputController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(hintText: "API key"),
+                ),
+                Text("Enter your private API secret"),
+                TextField(
+                  controller: _apiSecretInputController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(hintText: "API secret"),
                 )
               ],
             )));

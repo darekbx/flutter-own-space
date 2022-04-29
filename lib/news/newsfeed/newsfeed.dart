@@ -21,6 +21,7 @@ class _NewsFeedState extends State<NewsFeed> {
   var _localStorage = LocalStorage();
   var _forceRefresh = false;
   var _apiKey;
+  var _apiSecret;
   var _paginationInfo;
   var _errorMessage;
   List<dynamic> _itemsList;
@@ -35,8 +36,10 @@ class _NewsFeedState extends State<NewsFeed> {
 
   void _loadApiKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiKey = apiKey;
+      _apiSecret = apiSecret;
     });
   }
 
@@ -52,7 +55,7 @@ class _NewsFeedState extends State<NewsFeed> {
     var startPosition = _scrollController.position.pixels;
     CommonWidgets.showLoadingDialog(context);
     if (_paginationInfo != null && _paginationInfo["next"] != null) {
-      var nextPageData = await Api(_apiKey).loadUrl(_paginationInfo["next"]);
+      var nextPageData = await Api(_apiKey, _apiSecret).loadUrl(_paginationInfo["next"]);
       setState(() {
         _appendToList(nextPageData);
 
@@ -71,7 +74,7 @@ class _NewsFeedState extends State<NewsFeed> {
   Widget build(BuildContext context) {
     if (_itemsList == null) {
       return FutureBuilder(
-          future: Api(_apiKey).loadPromotedLinks(forceRefresh: _forceRefresh),
+          future: Api(_apiKey, _apiSecret).loadPromotedLinks(forceRefresh: _forceRefresh),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             return CommonWidgets.handleFuture(snapshot, (data) {
               _itemsList = List();

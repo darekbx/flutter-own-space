@@ -20,6 +20,7 @@ class _TagState extends State<Tag> {
   var _localStorage = LocalStorage();
   var _forceRefresh = false;
   var _apiKey;
+  var _apiSecret;
   var _isDeleted = false;
 
   @override
@@ -30,8 +31,10 @@ class _TagState extends State<Tag> {
 
   void _loadApiKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiKey = apiKey;
+      _apiSecret = apiSecret;
     });
   }
 
@@ -43,7 +46,7 @@ class _TagState extends State<Tag> {
           child: Text("Deleted", style: TextStyle(color: Colors.black45)));
     }
     return FutureBuilder(
-      future: Api(_apiKey)
+      future: Api(_apiKey, _apiSecret)
           .loadTagContents(widget.tagName, forceRefresh: _forceRefresh),
       builder: (BuildContext context,
           AsyncSnapshot<MapEntry<int, String>> snapshot) {

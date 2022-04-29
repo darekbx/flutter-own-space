@@ -19,6 +19,7 @@ class Item extends StatefulWidget {
 class _ItemState extends State<Item> {
   var _localStorage = LocalStorage();
   var _apiKey;
+  var _apiSecret;
 
   @override
   void initState() {
@@ -28,8 +29,10 @@ class _ItemState extends State<Item> {
 
   void _loadApiKey() async {
     var apiKey = await _localStorage.getApiKey();
+    var apiSecret = await _localStorage.getApiSecret();
     setState(() {
       _apiKey = apiKey;
+      _apiSecret = apiSecret;
     });
   }
 
@@ -39,10 +42,10 @@ class _ItemState extends State<Item> {
     var title;
     if (widget.type == "entry") {
       title = "Entry id: ${widget.itemId}";
-      future = Api(_apiKey).loadEntry(widget.itemId);
+      future = Api(_apiKey, _apiSecret).loadEntry(widget.itemId);
     } else {
       title = "Link id: ${widget.itemId}";
-      future = Api(_apiKey).loadLink(widget.itemId);
+      future = Api(_apiKey, _apiSecret).loadLink(widget.itemId);
     }
     return Scaffold(
         appBar: AppBar(title: Text(title)),
