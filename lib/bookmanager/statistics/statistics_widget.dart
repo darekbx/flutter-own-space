@@ -51,7 +51,13 @@ class StatisticsWidgetState extends State<StatisticsWidget> {
         Container(
             width: double.infinity,
             height: 100,
-            child: CustomPaint(painter: StatisticsChartPainter(books))
+            child:
+                Transform(transform: Matrix4.rotationX(
+                    -2 * 3.141 / 2
+                ),
+                    alignment: Alignment.center,
+                    child: CustomPaint(painter: StatisticsChartPainter(books))
+                )
         ),
         Expanded(
             child:
@@ -72,9 +78,9 @@ class StatisticsWidgetState extends State<StatisticsWidget> {
 
                             Row(
                               children: <Widget>[
-                                Text("${books[index].polishCount()}", style: TextStyle(color: Colors.red)),
+                                Text("${books[index].polishCount()}", style: TextStyle(color: Color.fromARGB(255, 182, 24, 39))),
                                 Text(" / "),
-                                Text(" ${books[index].englishCount}", style: TextStyle(color: Colors.blue))
+                                Text(" ${books[index].englishCount}", style: TextStyle(color: Color.fromARGB(255, 0, 92, 178)))
                               ],
                             ),
                           ],
