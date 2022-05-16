@@ -40,13 +40,15 @@ class _TagsState extends State<Tags> {
     showDialog(
         context: context,
         builder: (BuildContext context) {
+          TextEditingController controller;
           return AlertDialog(
             title: Text("Add new tag"),
             content:
             FutureBuilder(
               future: Api(_apiKey, _apiSecret).loadPopularTags(),
               builder:
-                  (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                  (BuildContext context,
+                  AsyncSnapshot<List<dynamic>> snapshot) {
                 return CommonWidgets.handleFuture(snapshot, (json) {
                   return Autocomplete<String>(
                       optionsBuilder: (TextEditingValue textEditingValue) {
@@ -59,22 +61,21 @@ class _TagsState extends State<Tags> {
                       },
                       fieldViewBuilder: (BuildContext context,
                           TextEditingController textEditingController,
-                          FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                          FocusNode focusNode,
+                          VoidCallback onFieldSubmitted) {
+                        controller = textEditingController;
                         return TextFormField(
                           controller: textEditingController,
                           decoration: InputDecoration(hintText: "Tag name without #"),
                           focusNode: focusNode,
                           onFieldSubmitted: (String value) {
                             onFieldSubmitted();
-                            //_tagFieldController.text = value; TODO remove or uncomment?
                           },
                         );
                       },
                       onSelected: (String selection) {
                         _tagFieldController.text = selection;
                       }
-                    //controller: _tagFieldController,
-                    //decoration: InputDecoration(hintText: "Tag name without #"),
                   );
                 });
               },
@@ -84,8 +85,12 @@ class _TagsState extends State<Tags> {
                   child: Text("Add"),
                   onPressed: () {
                     setState(() {
-                      _addTag(_tagFieldController.text);
+                      var tag = _tagFieldController.text.isEmpty
+                          ? controller.text
+                          : _tagFieldController.text;
+                      _addTag(tag);
                       _tagFieldController.clear();
+                      controller.clear();
                     });
                     Navigator.pop(context);
                   }),

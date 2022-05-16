@@ -39,6 +39,8 @@ class TimeKeeper {
   Future<bool> _canOpen(String key, {bool dontUpdate = false}) async {
     if (!ENABLED) return true;
 
+    //await reset();
+
     var lastOpenTime = (await SharedPreferences.getInstance()).getInt(key);
 
     if (lastOpenTime == null) {
