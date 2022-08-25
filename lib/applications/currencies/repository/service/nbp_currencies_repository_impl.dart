@@ -2,8 +2,6 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../../../../env_utils.dart';
-import '../../../../main.dart';
 import '../../domain/currencies.dart';
 import '../currencies_repository.dart';
 
@@ -31,7 +29,7 @@ class NbpCurrenciesRepositoryImpl implements CurrenciesRepository {
 
   static const String _ApiUrl = "https://api.nbp.pl/api/exchangerates/tables/A?format=json";
   static const String _cacheKey = "cacheKey";
-  static const int _cacheTimeout = 30 * 60 * 1000; // 30 minutes
+  static const int _cacheTimeout = 60 * 60 * 1000; // 60 minutes
 
   List<CacheItem> _cacheItems = [];
 
@@ -39,10 +37,6 @@ class NbpCurrenciesRepositoryImpl implements CurrenciesRepository {
   Future<double> getConversion(Currency from, Currency to) async {
     try {
       await _loadCache();
-      var apiKey = getIt<EnvUtils>().get("CURRENCY_CONVERTER_API_KEY");
-      if (apiKey == null) {
-        throw NullApiKeyException();
-      }
       var fromName = _getEnumValue(from.toString());
       var toName = _getEnumValue(to.toString());
       var conversion = "${fromName}_$toName";
@@ -100,16 +94,17 @@ class NbpCurrenciesRepositoryImpl implements CurrenciesRepository {
 
   double _readConversionValue(Currency from, String jsonString) {
     var jsonData = json.decode(jsonString);
-    var rates = jsonData["rates"];
-    var rate = 0.00;
+    var rates = jsonData[0]["rates"];
+    var value = 0.00;
 
     for (var rate in rates) {
-      if (rate["code"].toString().toUpperCase() == from.name.toUpperCase()) {
-        rate = rate["mid"];
+      if (rate["code"].toString().toUpperCase() == from.toString().split('.').last.toUpperCase()) {
+        value = rate["mid"];
+        break;
       }
     }
 
-    return rate;
+    return value;
   }
 
   String _getEnumValue(String enumString) => enumString.split(".").last;
