@@ -5,6 +5,7 @@ import 'package:ownspace/applications/currencies/domain/currencies_use_case.dart
 import 'package:ownspace/applications/currencies/domain/gold_use_case.dart';
 import 'package:ownspace/applications/currencies/repository/gold_quotes_repository.dart';
 import 'package:ownspace/applications/currencies/repository/service/gold_quotes_repository_impl.dart';
+import 'package:ownspace/applications/currencies/repository/service/nbp_currencies_repository_impl.dart';
 import 'package:ownspace/own_space_app.dart';
 
 import 'applications/currencies/repository/currencies_repository.dart';
@@ -20,7 +21,7 @@ void main() {
     await envUtils.initializeUtils();
     return envUtils;
   });
-  getIt.registerFactory<CurrenciesRepository>(() => CurrenciesRepositoryImpl());
+  getIt.registerFactory<CurrenciesRepository>(() => NbpCurrenciesRepositoryImpl());
   getIt.registerFactory<GoldQuotesRepository>(() => GoldQuotesRepositoryImpl());
   getIt.registerFactory<CurrenciesUseCase>(() => CurrenciesUseCase());
   getIt.registerFactory<GoldUseCase>(() => GoldUseCase());
