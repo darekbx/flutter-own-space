@@ -17,6 +17,11 @@ class InProgress extends BackupState { }
 
 class RestoreFinished extends BackupState { }
 
+class RestoreConfirm extends BackupState {
+  final String fileName;
+  RestoreConfirm(this.fileName) : super([fileName]);
+}
+
 class BackupFinished extends BackupState {
   final String fileName;
   BackupFinished(this.fileName) : super([fileName]);

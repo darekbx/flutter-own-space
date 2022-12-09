@@ -15,6 +15,10 @@ class MakeBackup extends BackupEvent {
   MakeBackup() : super([]);
 }
 
+class ExternaRestore extends BackupEvent {
+  ExternaRestore() : super([]);
+}
+
 class ListBackups extends BackupEvent {
   ListBackups() : super([]);
 }

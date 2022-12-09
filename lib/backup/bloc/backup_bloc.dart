@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:ownspace/backup/backup_creator.dart';
 import 'package:ownspace/backup/bloc/backup_event.dart';
 import 'package:ownspace/backup/bloc/backup_state.dart';
 import 'package:ownspace/backup/model/backup_file.dart';
+import 'package:flutter_document_picker/flutter_document_picker.dart';
 
 class BackupBloc extends Bloc<BackupEvent, BackupState> {
 
@@ -18,6 +20,11 @@ class BackupBloc extends Bloc<BackupEvent, BackupState> {
         yield InProgress();
         String backupFileName = await _backupCreator.createBackup();
         yield BackupFinished(backupFileName);
+      } else if (event is ExternaRestore) {
+
+        final path = await FlutterDocumentPicker.openDocument();
+        yield RestoreConfirm(path);
+
       } else if (event is RestoreBackup) {
         await _backupCreator.restore(event.backupFile);
         yield RestoreFinished();

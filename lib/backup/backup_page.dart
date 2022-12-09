@@ -41,7 +41,13 @@ class _BackupPageState extends State<BackupPage> {
                     icon: Icon(Icons.backup),
                     label: Text("Backup"),
                     heroTag: "backup_button",
-                    onPressed: () => _backupBloc.add(MakeBackup()))
+                    onPressed: () => _backupBloc.add(MakeBackup())),
+                Padding(padding: EdgeInsets.all(4.0)),
+                FloatingActionButton.extended(
+                    icon: Icon(Icons.backup),
+                    label: Text("Restore external"),
+                    heroTag: "backup_restore",
+                    onPressed: () => _backupBloc.add(ExternaRestore()))
               ]),
         )
     );
@@ -54,6 +60,12 @@ class _BackupPageState extends State<BackupPage> {
       builder: (context, state) {
         if (state is InProgress) {
           return _showStatus("In progress...");
+        } else if (state is RestoreConfirm) {
+          Future.delayed(Duration(milliseconds: 500)).then((_) {
+            _restoreConfirmation(BackupFile(
+                "Remote file", state.fileName, DateTime(1970), false));
+          });
+          return Container();
         } else if (state is InitialBackupState) {
           _backupBloc.add(ListBackups());
           return Container();
