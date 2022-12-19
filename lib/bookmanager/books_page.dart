@@ -74,16 +74,20 @@ class _BooksPageState extends State<BooksPage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.import_contacts)
+            icon: Icon(Icons.import_contacts),
+            label: "Books",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.watch_later),
+            label: "To Read",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.battery_charging_full),
+            label: "Charging",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
+            label: "Statistics",
           ),
         ],
         type: BottomNavigationBarType.fixed,

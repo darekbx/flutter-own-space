@@ -43,6 +43,6 @@ var Sources = [
   Source(SourceType.NEWS_Y_COMBINATOR, "https://news.ycombinator.com/rss", "assets/news_y_logo.png"),
   Source(SourceType.HACKADAY, "https://hackaday.com/blog/feed/", "assets/hackaday_logo.png"),
   Source(SourceType.ARDUINO, "https://blog.arduino.cc/feed/", "assets/arduino_logo.png"),
-  Source(SourceType.BOTLAND, "https://botland.com.pl/blog/feed/", "assets/botland_logo.png"),
+  //Source(SourceType.BOTLAND, "https://botland.com.pl/blog/feed/", "assets/botland_logo.png"),
   Source(SourceType.FORBOT, "https://forbot.pl/blog/kanal-rss", "assets/forbot_logo.png"),
 ];
